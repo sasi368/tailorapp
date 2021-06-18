@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "85331995720",
+    "project_id": "sasichat-2ce75",
+    "storage_bucket": "sasichat-2ce75.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:85331995720:android:ddfd5194180aaa15993c7d",
+        "android_client_info": {
+          "package_name": "com.sasichat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "85331995720-97nbrcqrd45npj6hi3qp305mobc7dtv7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdRg_AwHfLABKwN0rIlX4Q5h89-Fw6U3A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "85331995720-97nbrcqrd45npj6hi3qp305mobc7dtv7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
