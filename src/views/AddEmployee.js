@@ -194,7 +194,7 @@ export default class AddEmployee extends Component<props> {
             </Col>
             <Col style={{height: '100%', width: '85%', alignSelf: 'center'}}>
               <Body>
-                <Title style={styles.title}>Enter Employee Details</Title>
+                <Title style={styles.title}>Add Employee</Title>
               </Body>
             </Col>
           </Row>

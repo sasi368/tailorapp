@@ -4,6 +4,8 @@ import {
   Content,
   Container,
   Header,
+  List, 
+  ListItem,
   Body,
   Title,
   Left,
@@ -28,26 +30,21 @@ import RadioForm, {
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import {CommonActions} from '@react-navigation/native';
-import { Table, TableWrapper, Row as Rowd, Rows, Cols, Cell } from 'react-native-table-component';
 
 export default class ViewOrder extends Component {
   constructor(props) {
     super(props);
      this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      HeadTable: ['OrderId', 'Customer Name', 'Service', 'Track'],
-      DataTable: [
-        ['0001', 'Sasi', 'Shirt', 'Check'],
-        ['0002', 'Lokeshwaran', 'Pant', 'Check'],
-        ['0003', 'Ramashraja', 'Kurtha', 'Check'],
-        ['0004', 'Sivakumar', 'T-shirt', 'Check'],
-        ['0005', 'Sakthi', 'jeans', 'Check']
-      ]
-    }
+    } 
   }
 
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
+  };
+
+  show_tracking = () => {
+    this.props.navigation.navigate('Tracking');
   };
 
   render() {
@@ -80,16 +77,87 @@ export default class ViewOrder extends Component {
             </Col>
             <Col style={{height: '100%', width: '85%', alignSelf: 'center'}}>
               <Body>
-                <Title style={styles.title}>View Order</Title>
+                <Title style={styles.title}>View Orders</Title>
               </Body>
             </Col>
           </Row>
         </Header>
-        <Content style={styles.container}>
-        <Table borderStyle={{borderWidth: 1, borderColor: '#ffa1d2'}}>
-          <Rowd data={state.HeadTable} style={styles.HeadStyle} textStyle={styles.TableText}/>
-          <Rows data={state.DataTable} textStyle={styles.TableText}/>
-        </Table>
+        <Content>
+        <Content>
+          <List>
+            <ListItem itemDivider>
+              <Row>
+              <Col>
+              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
+               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
+              </Col>
+              </Row>
+            </ListItem>                    
+            <ListItem>
+            <Row>
+            <Col>
+              <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
+              <Text>Pants</Text>
+              <Text>20/02/2020</Text>
+                 
+            </Col> 
+            </Row>
+            </ListItem>
+           <ListItem itemDivider>
+              <Row>
+              <Col>
+              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
+               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
+              </Col>
+              </Row>
+            </ListItem>                    
+            <ListItem>
+            <Row>
+            <Col>
+             <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
+              <Text>Pants</Text>
+              <Text>20/02/2020</Text>
+                
+            </Col> 
+            </Row>
+            </ListItem>
+          <ListItem itemDivider>
+            <Row>
+              <Col>
+              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
+               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
+              </Col>
+              </Row>
+            </ListItem>                    
+            <ListItem>
+            <Row>
+            <Col>
+              <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
+              <Text>Pants</Text>
+              <Text>20/02/2020</Text>
+            </Col> 
+            </Row>
+            </ListItem>
+            <ListItem itemDivider>
+              <Row>
+              <Col>
+              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
+               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
+              </Col>
+              </Row>
+            </ListItem>                    
+            <ListItem>
+            <Row>
+            <Col>
+              <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
+              <Text>Pants</Text>
+              <Text>20/02/2020</Text>
+              
+            </Col> 
+            </Row>
+            </ListItem>
+          </List>
+        </Content>
         </Content>
       </Container>
     )
@@ -110,15 +178,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginRight: 30,
   },
-  HeadStyle: { 
-    height: 80,
-    width:'100%',
-    alignContent: "center",
-    backgroundColor: '#ffe0f0'
+   btn: {
+    width: '60%',
+    borderColor: colors.theme_bg,
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    borderWidth:2
   },
-  TableText: { 
-    margin: 8,
-    fontSize:12,
-    fontWeight:'bold'
-  }
 });
