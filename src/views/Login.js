@@ -171,7 +171,6 @@ export default class Login extends Component {
             label={'Password'}
             placeholder="Enter your password"
             secureTextEntry={this.state.password.length === 0 ? false : true}
-            style={styles.inputStyle}
             leftIcon={<Icon name="lock" size={24} color="black" />}
             onChangeText={TextInputValue =>
               this.setState({password: TextInputValue})

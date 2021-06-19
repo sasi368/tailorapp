@@ -22,9 +22,14 @@ import Tracking from './src/views/Tracking';
 import AddEmployee from './src/views/AddEmployee';
 import AddCustomer from './src/views/AddCustomer';
 import AddServices from './src/views/AddServices';
+import AddBranches from './src/views/AddBranches';
+import TakeOrder from './src/views/TakeOrder';
+import ViewOrder from './src/views/ViewOrder';
+import StatusUpdate from './src/views/StatusUpdate';
 import CustomerDetails from './src/views/CustomerDetails';
 import CustomerList from './src/views/CustomerList';
 import Measurements from './src/views/Measurements';
+
 import Logout from './src/views/Logout';
 
 const Stack = createStackNavigator();
@@ -84,27 +89,7 @@ function MyDrawer() {
         labelStyle: { fontSize: 15, fontFamily:font_title },
       }}
     >
-      <Drawer.Screen
-        name="Reports"
-        component={Reports}
-        options={{ 
-          drawerIcon: ({ tintColor }) => (
-              <Icn name='linechart' type='antdesign' color={colors.theme_fg} size={25} />
-          ),
-        }}
-      />
-      {global.user_name != 'admin' &&
-      <Drawer.Screen
-        name="Show Services"
-        component={ShowServices}
-        options={{ 
-          drawerIcon: ({ tintColor }) => (
-              <Icn name='cart-plus' type='font-awesome' color={colors.theme_fg} size={25} />
-          ),
-        }}
-      />
-      }
-      {global.user_name == 'admin' &&
+     {global.user_name == 'admin' &&
       <Drawer.Screen
         name="Add Employee"
         component={AddEmployee}
@@ -115,7 +100,7 @@ function MyDrawer() {
         }}
       />
       }
-      {global.user_name != 'admin' &&
+     {global.user_name != 'admin' &&
       <Drawer.Screen
         name="Customers"
         component={CustomerList}
@@ -126,17 +111,104 @@ function MyDrawer() {
         }}
       />
       }
-      {global.user_name == 'admin' &&
+      {global.user_name != 'admin' &&
       <Drawer.Screen
-        name="Add Services"
-        component={AddServices}
+        name="Take Order"
+        component={TakeOrder}
         options={{ 
           drawerIcon: ({ tintColor }) => (
-              <Icn name='switcher' type='antdesign' color={colors.theme_fg} size={25} />
+              <Icn name='clipboard' type='entypo' color={colors.theme_fg} size={25} />
           ),
         }}
       />
       }
+      {global.user_name != 'admin' &&
+      <Drawer.Screen
+        name="View Order"
+        component={ViewOrder}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='shopping-cart' type='entypo' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+      {global.user_name == 'admin' &&
+      <Drawer.Screen
+        name="Add Customer"
+        component={AddCustomer}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='users' type='font-awesome' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+     }
+      {global.user_name == 'admin' &&
+      <Drawer.Screen
+        name="Add Service"
+        component={AddServices}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='tasks' type='font-awesome' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+      {global.user_name == 'admin' &&
+      <Drawer.Screen
+        name="Add Branch"
+        component={AddBranches}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='shop' type='entypo' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+      {global.user_name == 'admin' &&
+      <Drawer.Screen
+        name="Take Order"
+        component={TakeOrder}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='clipboard' type='entypo' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+      {global.user_name == 'admin' &&
+      <Drawer.Screen
+        name="View Order"
+        component={ViewOrder}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='shopping-cart' type='entypo' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+       {global.user_name != 'admin' &&
+      <Drawer.Screen
+        name="Show Services"
+        component={ShowServices}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='cart-plus' type='font-awesome' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+      <Drawer.Screen
+        name="Reports"
+        component={Reports}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='linechart' type='antdesign' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+     
       {global.user_name == 'admin' &&
       <Drawer.Screen
         name="Tracking"
@@ -144,6 +216,17 @@ function MyDrawer() {
         options={{ 
           drawerIcon: ({ tintColor }) => (
               <Icn name='bar-graph' type='entypo' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+      {global.user_name != 'admin' &&
+      <Drawer.Screen
+        name="Status Update"
+        component={StatusUpdate}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='update' type='MaterialCommunityIcons' color={colors.theme_fg} size={25} />
           ),
         }}
       />
@@ -180,6 +263,10 @@ function App() {
         <Stack.Screen name="AddCustomer" component={AddCustomer} />
         <Stack.Screen name="AddEmployee" component={AddEmployee} />
         <Stack.Screen name="AddServices" component={AddServices} />
+        <Stack.Screen name="AddBranches" component={AddBranches} />
+        <Stack.Screen name="TakeOrder" component={TakeOrder} />
+        <Stack.Screen name="ViewOrder" component={ViewOrder} />
+        <Stack.Screen name="StatusUpdate" component={StatusUpdate} />
         <Stack.Screen name="CustomerDetails" component={CustomerDetails} />
         <Stack.Screen name="CustomerList" component={CustomerList} />
         <Stack.Screen name="Measurements" component={Measurements} />
