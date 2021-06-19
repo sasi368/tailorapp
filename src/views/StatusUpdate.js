@@ -43,8 +43,12 @@ export default class StatusUpdate extends Component {
     this.props.navigation.goBack(null);
   };
 
-  Updatestatus = () => {
-    this.props.navigation.navigate('MeasurementDetails');
+  view_details = () => {
+    this.props.navigation.navigate('ViewMeasurementDetails');
+  };
+
+  update_status = () => {
+    this.props.navigation.navigate('UpdateOrderStatus');
   };
 
   render() {
@@ -97,6 +101,7 @@ export default class StatusUpdate extends Component {
               <View style={{marginTop:10}} /> 
                 <Button 
                  buttonStyle={styles.btn}
+                 onPress={this.update_status}
                   title={'UpdateStatus'}
                   titleStyle={{
                     color: colors.theme_bg,
@@ -106,8 +111,8 @@ export default class StatusUpdate extends Component {
                 <View style={{marginTop:10}} />  
                  <Button
                   buttonStyle={styles.btn}
+                  onPress={this.view_details}
                   title={'Measurement Details'}
-                  onPress={this.Updatestatus}
                   titleStyle={{
                     color: colors.theme_bg,
                     fontSize: 13,
@@ -128,6 +133,7 @@ export default class StatusUpdate extends Component {
               <View style={{marginTop:10}} /> 
                 <Button
                  buttonStyle={styles.btn}
+                 onPress={this.update_status}
                   title={'UpdateStatus'}
                   titleStyle={{
                     color: colors.theme_bg,
@@ -137,6 +143,7 @@ export default class StatusUpdate extends Component {
                 <View style={{marginTop:10}} />  
                  <Button
                   buttonStyle={styles.btn}
+                  onPress={this.view_details}
                   title={'Measurement Details'}
                   titleStyle={{
                     color: colors.theme_bg,
@@ -158,6 +165,7 @@ export default class StatusUpdate extends Component {
               <View style={{marginTop:10}} /> 
                 <Button 
                   buttonStyle={styles.btn}
+                  onPress={this.update_status}
                   title={'UpdateStatus'}
                   titleStyle={{
                     color: colors.theme_bg,
@@ -167,6 +175,7 @@ export default class StatusUpdate extends Component {
                 <View style={{marginTop:10}} />  
                  <Button
                   buttonStyle={styles.btn}
+                  onPress={this.view_details}
                   title={'Measurement Details'}
                   titleStyle={{
                     color: colors.theme_bg,
@@ -188,6 +197,7 @@ export default class StatusUpdate extends Component {
               <View style={{marginTop:10}} /> 
                 <Button 
                   buttonStyle={styles.btn}
+                  onPress={this.update_status}
                   title={'UpdateStatus'}
                   titleStyle={{
                     color: colors.theme_bg,
@@ -197,6 +207,7 @@ export default class StatusUpdate extends Component {
                 <View style={{marginTop:10}} />  
                  <Button
                   buttonStyle={styles.btn}
+                  onPress={this.view_details}
                   title={'Measurement Details'}
                   titleStyle={{
                     color: colors.theme_bg,
