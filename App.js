@@ -26,6 +26,8 @@ import AddBranches from './src/views/AddBranches';
 import TakeOrder from './src/views/TakeOrder';
 import ViewOrder from './src/views/ViewOrder';
 import StatusUpdate from './src/views/StatusUpdate';
+import ViewMeasurementDetails from './src/views/ViewMeasurementDetails';
+import UpdateOrderStatus from './src/views/UpdateOrderStatus';
 import CustomerDetails from './src/views/CustomerDetails';
 import CustomerList from './src/views/CustomerList';
 import Measurements from './src/views/Measurements';
@@ -100,13 +102,13 @@ function MyDrawer() {
         }}
       />
       }
-     {global.user_name != 'admin' &&
+     {global.user_name == 'admin' &&
       <Drawer.Screen
-        name="Customers"
+        name="Add Customer"
         component={CustomerList}
         options={{ 
           drawerIcon: ({ tintColor }) => (
-              <Icn name='people' type='SimpleLineIcons' color={colors.theme_fg} size={25} />
+              <Icn name='users' type='font-awesome' color={colors.theme_fg} size={25} />
           ),
         }}
       />
@@ -124,7 +126,7 @@ function MyDrawer() {
       }
       {global.user_name != 'admin' &&
       <Drawer.Screen
-        name="View Order"
+        name="View Orders"
         component={ViewOrder}
         options={{ 
           drawerIcon: ({ tintColor }) => (
@@ -133,17 +135,7 @@ function MyDrawer() {
         }}
       />
       }
-      {global.user_name == 'admin' &&
-      <Drawer.Screen
-        name="Add Customer"
-        component={AddCustomer}
-        options={{ 
-          drawerIcon: ({ tintColor }) => (
-              <Icn name='users' type='font-awesome' color={colors.theme_fg} size={25} />
-          ),
-        }}
-      />
-     }
+     
       {global.user_name == 'admin' &&
       <Drawer.Screen
         name="Add Service"
@@ -179,7 +171,7 @@ function MyDrawer() {
       }
       {global.user_name == 'admin' &&
       <Drawer.Screen
-        name="View Order"
+        name="View Orders"
         component={ViewOrder}
         options={{ 
           drawerIcon: ({ tintColor }) => (
@@ -208,18 +200,7 @@ function MyDrawer() {
           ),
         }}
       />
-     
-      {global.user_name == 'admin' &&
-      <Drawer.Screen
-        name="Tracking"
-        component={Tracking}
-        options={{ 
-          drawerIcon: ({ tintColor }) => (
-              <Icn name='bar-graph' type='entypo' color={colors.theme_fg} size={25} />
-          ),
-        }}
-      />
-      }
+    
       {global.user_name != 'admin' &&
       <Drawer.Screen
         name="Status Update"
@@ -268,6 +249,8 @@ function App() {
         <Stack.Screen name="ViewOrder" component={ViewOrder} />
         <Stack.Screen name="StatusUpdate" component={StatusUpdate} />
         <Stack.Screen name="CustomerDetails" component={CustomerDetails} />
+        <Stack.Screen name="ViewMeasurementDetails" component={ViewMeasurementDetails} />
+        <Stack.Screen name="UpdateOrderStatus" component={UpdateOrderStatus} />
         <Stack.Screen name="CustomerList" component={CustomerList} />
         <Stack.Screen name="Measurements" component={Measurements} />
 

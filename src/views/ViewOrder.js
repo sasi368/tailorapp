@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Keyboard} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Alert, Keyboard,FlatList} from 'react-native';
 import {
   Content,
   Container,
   Header,
-  List, 
+  List,  
   ListItem,
   Body,
   Title,
@@ -18,6 +18,7 @@ import {
   api_url,
   show_branches,
   add_branches,
+  show_all_measurements,
   font_title,
   font_description,
 } from '../config/Constants';
@@ -29,26 +30,46 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native'; 
 
 export default class ViewOrder extends Component {
   constructor(props) {
     super(props);
      this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-    } 
+      customer_name: '',
+      order_datas:[],
+      isLoding: false,
+    }
+    this.show_order_details(); 
   }
 
-  handleBackButtonClick = () => {
+  handleBackButtonClick = () => { 
     this.props.navigation.goBack(null);
   };
 
-  show_tracking = () => {
-    this.props.navigation.navigate('Tracking');
+  show_tracking = order_id => {
+    this.props.navigation.navigate('Tracking', {order_id: order_id});
   };
 
+  show_order_details = async () => {
+    Keyboard.dismiss();
+    await axios({
+      method: 'get',
+      url: api_url + show_all_measurements,
+    })
+      .then(async response => {
+        //alert(JSON.stringify(response));
+        this.setState({order_datas: response.data.result});
+      })
+      .catch(error => {
+        this.showSnackbar('Something went wrong');
+      }); 
+  };
+
+
   render() {
-    const state = this.state;
+
     return (
       <Container>
         <View>
@@ -80,85 +101,38 @@ export default class ViewOrder extends Component {
                 <Title style={styles.title}>View Orders</Title>
               </Body>
             </Col>
-          </Row>
+          </Row> 
         </Header>
-        <Content>
-        <Content>
-          <List>
-            <ListItem itemDivider>
-              <Row>
-              <Col>
-              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
-               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
-              </Col>
-              </Row>
-            </ListItem>                    
-            <ListItem>
-            <Row>
-            <Col>
-              <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
-              <Text>Pants</Text>
-              <Text>20/02/2020</Text>
-                 
-            </Col> 
-            </Row>
-            </ListItem>
-           <ListItem itemDivider>
-              <Row>
-              <Col>
-              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
-               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
-              </Col>
-              </Row>
-            </ListItem>                    
-            <ListItem>
-            <Row>
-            <Col>
-             <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
-              <Text>Pants</Text>
-              <Text>20/02/2020</Text>
-                
-            </Col> 
-            </Row>
-            </ListItem>
-          <ListItem itemDivider>
-            <Row>
-              <Col>
-              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
-               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
-              </Col>
-              </Row>
-            </ListItem>                    
-            <ListItem>
-            <Row>
-            <Col>
-              <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
-              <Text>Pants</Text>
-              <Text>20/02/2020</Text>
-            </Col> 
-            </Row>
-            </ListItem>
-            <ListItem itemDivider>
-              <Row>
-              <Col>
-              <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: 0006</Text>
-               <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={this.show_tracking}>Track Order</Text>
-              </Col>
-              </Row>
-            </ListItem>                    
-            <ListItem>
-            <Row>
-            <Col>
-              <Text style={{fontFamily:font_title,fontSize:18}}>Sasikumar</Text>
-              <Text>Pants</Text>
-              <Text>20/02/2020</Text>
-              
-            </Col> 
-            </Row>
-            </ListItem>
-          </List>
-        </Content>
-        </Content>
+          <FlatList
+              data={this.state.order_datas}
+              renderItem={({item, index}) => (
+                <Content>
+               
+                  <List>
+                    <ListItem itemDivider>
+                      <Row>
+                      <Col>
+                      <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: {item.id}</Text>
+                       <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={() => this.show_tracking(item.id)}>Track Order</Text>
+                      </Col>
+                      </Row>
+                    </ListItem>                    
+                    <ListItem>
+                    <Row>
+                    <Col>
+                      <Text style={{fontFamily:font_title,fontSize:18}}>{item.customer_name}</Text>
+                      <Text>{item.service_name}</Text>
+                      <Text>{item.taken_on}</Text>
+                         
+                    </Col> 
+                    </Row>
+                    </ListItem>
+                  </List>
+                  
+                </Content>
+            )}
+              keyExtractor={item => item.id}
+            />
       </Container>
     )
   }

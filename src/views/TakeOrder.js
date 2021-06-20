@@ -64,6 +64,7 @@ export default class TakeOrder extends Component<props> {
       paincha: '',
       service_name: '',
       choosenIndex:0,
+      choosenIndex2:0,
       services_lists: [],
       show_customers_by_code: [],
       validation: false,
@@ -119,7 +120,7 @@ export default class TakeOrder extends Component<props> {
       url: api_url + add_measurements,
       data: {
         customer_code: this.state.customer_code,
-        customer_name: this.state.customer_name_flatlist,
+        customer_name: this.state.customer_name,
         service_name: this.state.service_name,
         service_price: 100,
         shirt_length: this.state.shirt_length,
@@ -233,7 +234,7 @@ export default class TakeOrder extends Component<props> {
             </Col>
           </Row> 
         </Header>
-
+ 
         <Content>
           <View> 
             <Text
@@ -274,7 +275,17 @@ export default class TakeOrder extends Component<props> {
                 <FlatList
                   data={this.state.show_customers_by_code}
                   renderItem={({ item }) => (
-                    <Text style={{alignSelf:'center',fontSize:16,fontFamily:font_title}}>Customer Name: {item.customer_name}</Text>      
+                  <View style={{paddingLeft: '13%'}}>
+                   <Picker style={styles.pickerStyle}
+                    selectedValue={this.state.language}
+                    onValueChange={(itemValue, itemPosition) =>
+                      this.setState({ customer_name: itemValue, choosenIndex2: itemPosition })
+                    }
+                   >   
+                      <Picker.Item label={item.customer_name} value={item.customer_name} />
+                   
+                   </Picker>
+                   </View>      
                   )}
                   keyExtractor={item => item.customer_name}
                 />

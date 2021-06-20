@@ -87,7 +87,7 @@ export default class CustomerList extends Component {
         //alert(error);
         this.showSnackbar('Something went wrong');
       });
-  };*/
+  };*/ 
 
   show_customers_by_branch = async () => {
     Keyboard.dismiss();
@@ -217,6 +217,9 @@ export default class CustomerList extends Component {
                       </Text>
                       <Text note style={{fontFamily: font_description}}>
                         {item.contact_no}
+                      </Text>
+                       <Text note style={{fontFamily: font_title}}>
+                        Code: {item.customer_code}
                       </Text>
                     </Body>
 

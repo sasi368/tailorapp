@@ -10,7 +10,7 @@ import Snackbar from 'react-native-snackbar';
 import {
   api_url,
   show_order_status,
-  font_title,
+  font_title, 
   font_description,
 } from '../config/Constants';
 
@@ -49,9 +49,10 @@ export default class Tracking extends Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      id: '',
+      order_id:this.props.route.params.order_id,
       isLoding: false,
     };
+    this.show_order_status();
   }
 
   handleBackButtonClick = () => {
@@ -59,13 +60,12 @@ export default class Tracking extends Component {
   };
 
   show_order_status = async () => {
-    Keyboard.dismiss();
     this.setState({isLoding: true});
     await axios({
-      method: 'post',
+      method: 'post', 
       url: api_url + show_order_status,
       data: {
-        id: this.state.id,
+        id: this.state.order_id,
       },
     })
       .then(async response => {
@@ -82,11 +82,10 @@ export default class Tracking extends Component {
         }
       })
       .catch(error => {
-        this.setState({isLoding: false});
-        alert('Order id not found');
         this.showSnackbar('Order id not found');
       });
   };
+
 
   showSnackbar(msg) {
     Snackbar.show({
@@ -130,13 +129,6 @@ export default class Tracking extends Component {
           </Row>
         </Header>
 
-        <TextInput
-          style={styles.textin}
-          placeholder={'Enter Order Id'}
-          keyboardType="numeric"
-          onChangeText={TextInputValue => this.setState({id: TextInputValue})}
-        />
-
         <View style={{padding: 15}}>
           {this.state.customer_name != null && (
             <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
@@ -155,15 +147,7 @@ export default class Tracking extends Component {
           )}
         </View>
 
-        <Button
-          onPress={() => this.show_order_status()}
-          buttonStyle={styles.btn}
-          title={'Search'}
-          titleStyle={{
-            color: colors.theme_fg,
-            fontSize: 20,
-            fontFamily: font_title,
-          }}></Button>
+      
         <View style={styles.container}>
           <View style={styles.stepIndicator}>
             <StepIndicator
