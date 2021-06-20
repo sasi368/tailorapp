@@ -13,7 +13,7 @@ import {
   Row,
   Col,
   Content,
-  Body,
+  Body, 
   Title,
   Container,
   Left,
@@ -29,6 +29,7 @@ import {
   user,
   api_url,
   show_customers,
+  show_customers_by_branch,
   no_data,
   font_title,
 } from '../config/Constants';
@@ -42,15 +43,16 @@ export default class CustomerList extends Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      customer_lists: [],
+      show_customers_by_branch: [],
       validation: false,
       isLoding: false,
     };
+    //alert(global.branch);
   }
 
   async componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.show_customer();
+      this.show_customers_by_branch();
     });
   }
 
@@ -70,7 +72,7 @@ export default class CustomerList extends Component {
     this.props.navigation.navigate('CustomerDetails', {id: id});
   };
 
-  show_customer = async () => {
+ /* show_customer = async () => {
     Keyboard.dismiss();
     this.setState({isLoding: true});
     await axios({
@@ -79,6 +81,26 @@ export default class CustomerList extends Component {
     })
       .then(async response => {
         this.setState({isLoding: false, customer_lists: response.data.result});
+      })
+      .catch(error => {
+        this.setState({isLoding: false});
+        //alert(error);
+        this.showSnackbar('Something went wrong');
+      });
+  };*/
+
+  show_customers_by_branch = async () => {
+    Keyboard.dismiss();
+    this.setState({isLoding: true});
+    await axios({
+      method: 'post',
+      url: api_url + show_customers_by_branch,
+      data: {
+        branch: global.branch,
+      },
+    })
+      .then(async response => {
+        this.setState({isLoding: false, show_customers_by_branch: response.data.result});
       })
       .catch(error => {
         this.setState({isLoding: false});
@@ -153,7 +175,7 @@ export default class CustomerList extends Component {
             </View>
             <View style={{margin: 10}} />
 
-            {this.state.customer_lists == '' && (
+            {this.state.show_customers_by_branch == '' && (
               <View>
                 <View style={{height: 250, marginTop: '25%'}}>
                   <LottieView source={no_data} autoPlay loop />
@@ -171,7 +193,7 @@ export default class CustomerList extends Component {
 
             <FlatList
               threshold={20}
-              data={this.state.customer_lists}
+              data={this.state.show_customers_by_branch}
               renderItem={({item, index}) => (
                 <List>
                   <ListItem avatar>

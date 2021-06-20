@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Keyboard,Picker,Image} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Alert, Keyboard,Picker,FlatList,Image} from 'react-native';
 import {
   Content,
   Container,
@@ -8,15 +8,20 @@ import {
   Title,
   Left,
   Card,
-  Row,
+  Row, 
   Col,
+  List,
+  ListItem,
 } from 'native-base';
-import {Button, Icon} from 'react-native-elements';
+import {Button, Icon, SearchBar, Input} from 'react-native-elements';
 import * as colors from '../assets/css/Colors';
 import {
   api_url,
+  show_services,
+  add_measurements,
   add_employee,
   show_branches,
+  show_customers_by_code,
   font_title,
   font_description,
   cuff, 
@@ -31,69 +36,73 @@ import {
 } from '../config/Constants';
 import axios from 'axios';
 import Snackbar from 'react-native-snackbar';
-import {StatusBar, Loader} from '../components/GeneralComponents';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
-import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
+import {StatusBar, Loader, ChatLoader} from '../components/GeneralComponents';
 import {CommonActions} from '@react-navigation/native';
-
-var radio_props = [
-  {label: 'Male', value: 'Male'},
-  {label: 'Female', value: 'Female'},
-];
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export default class TakeOrder extends Component<props> {
-  _menu = null;
+
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      user_name: '',
-      branch: '',
-      password: '',
+      customer_code: '',
+      customer_name: '',
+      service_name: '',
+      service_price: '',
+      shirt_length: '',
+      arm_length: '',
+      shoulder: '',
+      front_neck: '',
+      back_neck: '',
+      chest: '',
+      arm_hole: '',
+      cuff: '',
+      hip: '',
+      pant: '',
+      seat: '',
+      paincha: '',
+      service_name: '',
       choosenIndex:0,
-      branch_lists: [],
+      services_lists: [],
+      show_customers_by_code: [],
       validation: false,
       isLoding: false,
+      isLodingContent:false,
     };
-    this.show_branches(); 
+    this.show_services();
   }
 
-  setMenuRef = ref => {
-    this._menu = ref;
-  };
+  async componentDidMount() {  
+    this._unsubscribe=this.props.navigation.addListener('focus',()=>{
+      this.show_customers_by_code();
+    });
+  }
 
-  hideMenu1 = () => {
-    this._menu.hide();
-    this.setState({branch: 'MainBranch'});
-  };
-
-  hideMenu2 = () => {
-    this._menu.hide();
-    this.setState({branch: 'SubBranch'});
-  };
-
-  showMenu = () => {
-    this._menu.show();
-  };
+  search = async(val) =>{
+    await this.setState({ customer_code : val });
+    if(this.state.customer_code.length == 4){
+      await this.show_customers_by_code();
+    }
+  }
 
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
   };
 
-  show_branches = async () => {
+  updateSearch = (customer_code) => {
+    this.setState({ customer_code });
+  };
+ 
+  show_services = async () => {
     Keyboard.dismiss();
     this.setState({isLoding: true});
     await axios({
       method: 'get',
-      url: api_url + show_branches,
+      url: api_url + show_services,
     })
       .then(async response => {
-        this.setState({isLoding: false, branch_lists: response.data.result});
-        //alert(JSON.stringify(response));
+        this.setState({isLoding: false, services_lists: response.data.result});
       })
       .catch(error => {
         this.setState({isLoding: false});
@@ -102,56 +111,70 @@ export default class TakeOrder extends Component<props> {
       });
   };
 
-  add_employee = async branch => {
+  place_order = async () => {
     Keyboard.dismiss();
-    await this.checkValidate();
-    if (this.state.validation) {
-      this.setState({isLoding: true});
-      await axios({
-        method: 'post',
-        url: api_url + add_employee,
-        data: {
-          user_name: this.state.user_name,
-          branch: this.state.branch_name,
-          password: this.state.password,
-        },
+    this.setState({isLoding: true});
+    await axios({
+      method: 'post',
+      url: api_url + add_measurements,
+      data: {
+        customer_code: this.state.customer_code,
+        customer_name: this.state.customer_name_flatlist,
+        service_name: this.state.service_name,
+        service_price: 100,
+        shirt_length: this.state.shirt_length,
+        arm_length: this.state.arm_length,
+        shoulder: this.state.shoulder,
+        front_neck: this.state.front_neck, 
+        back_neck: this.state.back_neck,
+        chest: this.state.chest,
+        arm_hole: this.state.arm_hole,
+        cuff: this.state.cuff,
+        hip: this.state.hip,
+        pant: this.state.pant,
+        seat: this.state.seat,
+        paincha: this.state.paincha,
+        branch: global.branch,
+      },
+    })
+      .then(async response => {
+        this.setState({isLoding: false});
+        if (response.data.status == 1) {
+          //alert(JSON.stringify(response));
+          this.alert_func();
+        } else {
+          alert(response.data.message);
+        }
       })
-        .then(async response => {
-          this.setState({isLoding: false});
-          if (response.data.status == 1 && this.state.choosenIndex == 0) {
-            alert('Select any Branch');
-          }else if(response.data.status == 1 && this.state.choosenIndex != 0){
-             await this.alert_func();
-          } else {
-            alert(response.data.message);
-          }
-        })
-        .catch(error => {
-          this.setState({isLoding: false});
-          alert(error);
-          this.showSnackbar('Something went wrong');
-        });
-    }
+      .catch(error => {
+        //alert(error);
+        this.setState({isLoding: false});
+        this.showSnackbar('Something went wrong');
+      });
   };
 
-
-  checkValidate() {
-    if (this.state.user_name == '') {
-      this.setState({validation: false});
-      this.showSnackbar('Employee name field required');
-      return false;
-    } else if (this.state.password == '') {
-      this.setState({validation: false});
-      this.showSnackbar('password field required');
-      return false;
-    } else {
-      this.setState({validation: true});
-      return true;
-    }
-  }
+  show_customers_by_code = async () => {
+    Keyboard.dismiss();
+    this.setState({isLodingContent: true});
+    await axios({
+      method: 'post',
+      url: api_url + show_customers_by_code,
+      data: {
+        customer_code: this.state.customer_code,
+      },
+    })
+      .then(async response => {
+        this.setState({isLodingContent: false, show_customers_by_code: response.data.result});
+      })
+      .catch(error => {
+        this.setState({isLodingContent: false});
+        //alert(error);
+        this.showSnackbar('Something went wrong');
+      });
+  };
 
   alert_func = () =>
-    Alert.alert('Success', 'Employee Added', [
+    Alert.alert('Success', 'Order Placed', [
       {
         text: 'Cancel',
         style: 'cancel',
@@ -176,6 +199,7 @@ export default class TakeOrder extends Component<props> {
   }
 
   render() {
+    
     return (
       <Container>
         <View>
@@ -207,11 +231,11 @@ export default class TakeOrder extends Component<props> {
                 <Title style={styles.title}>Take Order</Title>
               </Body>
             </Col>
-          </Row>
+          </Row> 
         </Header>
 
         <Content>
-          <View>
+          <View> 
             <Text
               style={{
                 fontSize: 25,
@@ -222,34 +246,51 @@ export default class TakeOrder extends Component<props> {
               Enter Order Details
             </Text>
           </View>
+         <View>
+          <Input
+            placeholder='Search Customer Code'
+            inputStyle={{fontSize:15,padding:5,alignSelf:'center',fontFamily:font_description, padding:10}}
+            inputContainerStyle={{height:40, width:'90%', borderRadius:25, borderWidth:1,alignSelf:'center',borderColor:colors.theme_fg_five}}
+            placeholderTextColor = 'gray'
+            underlineColorAndroid="transparent"
+            onChangeText={(TextInputValue) =>
+              this.search(TextInputValue)
+            }
+            leftIcon={
+              <FontAwesome  name='search' 
+              size={20}
+              color='black'
+              style={{ color:colors.theme_bg,margin:10}}
+            />
+            }
+          /> 
+          </View>
+
+           {this.state.isLodingContent == true &&  
+            <ChatLoader />
+            }
           <View>
-            <TextInput
-              style={styles.textin}
-              placeholder={'Customer Code'}
-              onChangeText={TextInputValue =>
-                this.setState({customer_code: TextInputValue})
-              }
-            />
+             <List>
+                <FlatList
+                  data={this.state.show_customers_by_code}
+                  renderItem={({ item }) => (
+                    <Text style={{alignSelf:'center',fontSize:16,fontFamily:font_title}}>Customer Name: {item.customer_name}</Text>      
+                  )}
+                  keyExtractor={item => item.customer_name}
+                />
+              </List>
           </View>
-           <View>
-            <TextInput
-              style={styles.textin}
-              placeholder={'Customer Name'}
-              onChangeText={TextInputValue =>
-                this.setState({customer_name: TextInputValue})
-              }
-            />
-          </View>
+
           <View style={{paddingLeft: '13%'}}>
                   <Picker style={styles.pickerStyle}
                     selectedValue={this.state.language}
                     onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ branch_name: itemValue, choosenIndex: itemPosition })
+                      this.setState({ service_name: itemValue,choosenIndex: itemPosition })
                     }
                   >   
                   <Picker.Item label='SELECT SERVICE' value='Choose Here' />
-                   {this.state.branch_lists.map((row, index) => (
-                      <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
+                   {this.state.services_lists.map((row, index) => (
+                      <Picker.Item key={row.id} label={row.service_name} value={row.service_name} />
                     ))} 
                   </Picker>
        
@@ -528,9 +569,13 @@ export default class TakeOrder extends Component<props> {
               </Row>
             </Card>*/}
             </View>
+             {this.state.choosenIndex != 0 &&
           <View style={{marginTop: 20}}>
+
+          
+         
             <Button
-              onPress={this.add_employee}
+              onPress={this.place_order}
               buttonStyle={styles.btn}
               title={'Place Order'}
               titleStyle={{
@@ -538,7 +583,10 @@ export default class TakeOrder extends Component<props> {
                 fontSize: 20,
                 fontFamily: font_title,
               }}></Button>
+          
+             
           </View>
+        }
         </Content>
         <Loader visible={this.state.isLoding} />
       </Container>

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Keyboard} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Alert, Keyboard, Picker } from 'react-native';
 import {
   Content,
   Container,
@@ -15,6 +15,7 @@ import * as colors from '../assets/css/Colors';
 import {
   api_url,
   add_customer,
+  show_branches,
   font_title,
   font_description,
 } from '../config/Constants';
@@ -39,14 +40,18 @@ export default class AddCustomer extends Component<props> {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       customer_name: '',
+      branch_lists: [],
+      branch_name: '',
       gender: '',
       email: '',
       contact_no: '',
       address: '',
       value: '',
+      choosenIndex:0,
       validation: false,
       isLoding: false,
     };
+    this.show_branches(); 
   }
 
   handleBackButtonClick = () => {
@@ -63,6 +68,7 @@ export default class AddCustomer extends Component<props> {
         url: api_url + add_customer,
         data: {
           customer_name: this.state.customer_name,
+          branch: this.state.branch_name,
           gender: this.state.gender,
           email: this.state.email,
           contact_no: this.state.contact_no,
@@ -84,10 +90,33 @@ export default class AddCustomer extends Component<props> {
     }
   };
 
+
+  show_branches = async () => {
+    Keyboard.dismiss();
+    this.setState({isLoding: true});
+    await axios({
+      method: 'get',
+      url: api_url + show_branches,
+    })
+      .then(async response => {
+        this.setState({isLoding: false, branch_lists: response.data.result});
+        //alert(JSON.stringify(response));
+      })
+      .catch(error => {
+        this.setState({isLoding: false});
+        //alert(error);
+        this.showSnackbar('Something went wrong');
+      });
+  };
+
   checkValidate() {
     if (this.state.customer_name == '') {
       this.setState({validation: false});
       this.showSnackbar('Customer name field required');
+      return false;
+    } else if (this.state.branch == '') {
+      this.setState({validation: false});
+      this.showSnackbar('Branch field required');
       return false;
     } else if (this.state.gender == '') {
       this.setState({validation: false});
@@ -226,6 +255,19 @@ export default class AddCustomer extends Component<props> {
               }
             />
           </View>
+          <View style={{paddingLeft: '13%'}}>
+           <Picker style={styles.pickerStyle}
+              selectedValue={this.state.language}
+              onValueChange={(itemValue, itemPosition) =>
+                  this.setState({ branch_name: itemValue, choosenIndex: itemPosition })
+              }
+           >   
+          <Picker.Item label='SELECT BRANCH' value='Choose Here' />
+              {this.state.branch_lists.map((row, index) => (
+                  <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
+              ))} 
+          </Picker>
+          </View>
           <View>
             <TextInput
               style={{
@@ -246,6 +288,7 @@ export default class AddCustomer extends Component<props> {
             />
           </View>
           <View style={{marginTop: 20}}>
+          {this.state.choosenIndex != 0 &&
             <Button
               onPress={() => this.add_customer()}
               buttonStyle={styles.btn}
@@ -255,6 +298,7 @@ export default class AddCustomer extends Component<props> {
                 fontSize: 20,
                 fontFamily: font_title,
               }}></Button>
+          }
           </View>
         </Content>
       </Container>
@@ -299,4 +343,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: 'center',
   },
+  pickerStyle:{  
+    height: 70,  
+    width: "80%",  
+    color: '#344953',  
+    justifyContent: 'center',  
+  },  
 });
