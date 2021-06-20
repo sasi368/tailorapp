@@ -21,8 +21,8 @@ export default class CustomerDetails extends Component {
       value: 0,
       isLoding:false,
       id:this.props.route.params.id,
-      service_name:this.props.route.params.service_name,
-      service_price:this.props.route.params.service_price
+      //service_name:this.props.route.params.service_name,
+      //service_price:this.props.route.params.service_price
     };
   }
 
@@ -43,29 +43,32 @@ export default class CustomerDetails extends Component {
     Keyboard.dismiss();     
         await axios({
           method: "post", 
-          url: api_url + customers_details,
+          url: api_url + customers_details, 
           data: {
             customer_id: this.state.id,
           },          
         })
       .then(async (response) => {
+        //alert(JSON.stringify(response));
           this.setState({ customer_name:response.data.result.customer_name,
+                          customer_code:response.data.result.customer_code,
                           number:response.data.result.contact_no,
                           email:response.data.result.email,
-                          gender:response.data.result.gender });
+                          gender:response.data.result.gender,
+                          branch:response.data.result.branch });
       })
       .catch((error) => {
           this.showSnackbar('Something went wrong');
       });
   };
 
-  view_detail = () => {
+ /* view_detail = () => {
     this.props.navigation.navigate("MeasurementDetails",{customer_id: this.state.id,service_name:this.state.service_name, service_price:this.state.service_price});
   };
 
   view_measurements = () => {
     this.props.navigation.navigate("Services",{customer_id: this.state.id,customer_name:this.state.customer_name});
-  };
+  };*/
 
   render() {
 
@@ -93,6 +96,7 @@ export default class CustomerDetails extends Component {
           </Col>
         </Row>
       </Header>
+
         <Content style={styles.padding_6}>
           <View>
             {this.state.customer_name == null &&
@@ -125,7 +129,19 @@ export default class CustomerDetails extends Component {
             {this.state.customer_name != null &&
               <Text style={{fontSize:15,margin:'7%',fontFamily:font_description}}>{this.state.gender}</Text>
             }
-           {this.state.customer_name != null &&
+            {this.state.customer_name != null &&
+            <Text style={{fontSize:20,margin:'3%',fontFamily:font_title}}>CUSTOMER CODE</Text>
+            }
+            {this.state.customer_name != null &&
+              <Text style={{fontSize:15,margin:'7%',fontFamily:font_description}}>{this.state.customer_code}</Text>
+            }
+            {this.state.customer_name != null &&
+            <Text style={{fontSize:20,margin:'3%',fontFamily:font_title}}>BRANCH</Text>
+            }
+            {this.state.customer_name != null &&
+              <Text style={{fontSize:15,margin:'7%',fontFamily:font_description}}>{this.state.branch}</Text>
+            }
+          {/* {this.state.customer_name != null &&
             <Divider style={{ backgroundColor: colors.theme_bg }} />
             }
              {this.state.customer_name != null &&
@@ -141,7 +157,7 @@ export default class CustomerDetails extends Component {
                    buttonStyle={styles.btn}
                    title={'Add Details'}titleStyle={{color:colors.theme_fg,fontSize:18,fontFamily:font_title}}>
                  </Button>
-               }
+               }*/}
           </View>
 
         </Content>     

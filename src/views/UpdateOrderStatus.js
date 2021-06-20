@@ -46,8 +46,8 @@ export default class UpdateOrderStatus extends Component<props> {
           style={{backgroundColor: '#F08080'}}>
           <View style={{justifyContent: 'center'}}>
             <Text
-              style={{color: 'white', fontSize: 22, fontFamily: font_title}}>
-              INFO
+              style={{color: 'white', fontSize: 18, fontFamily: font_title}}>
+              Work Update
             </Text>
           </View>
         </Header>

@@ -45,8 +45,8 @@ export default class MeasurementDetails extends Component<props> {
           style={{backgroundColor: '#F08080'}}>
           <View style={{justifyContent: 'center'}}>
             <Text
-              style={{color: 'white', fontSize: 22, fontFamily: font_title}}>
-              INFO
+              style={{color: 'white', fontSize: 20, fontFamily: font_title}}>
+              Measurement Details
             </Text>
           </View>
         </Header>

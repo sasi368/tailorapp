@@ -48,6 +48,7 @@ export default class CustomerList extends Component {
       isLoding: false,
     };
     //alert(global.branch);
+    this.show_customer();
   }
 
   async componentDidMount() {
@@ -72,7 +73,7 @@ export default class CustomerList extends Component {
     this.props.navigation.navigate('CustomerDetails', {id: id});
   };
 
- /* show_customer = async () => {
+  show_customer = async () => {
     Keyboard.dismiss();
     this.setState({isLoding: true});
     await axios({
@@ -87,7 +88,7 @@ export default class CustomerList extends Component {
         //alert(error);
         this.showSnackbar('Something went wrong');
       });
-  };*/ 
+  }; 
 
   show_customers_by_branch = async () => {
     Keyboard.dismiss();
@@ -175,6 +176,8 @@ export default class CustomerList extends Component {
             </View>
             <View style={{margin: 10}} />
 
+            {global.user_name != 'admin' &&
+            <View>
             {this.state.show_customers_by_branch == '' && (
               <View>
                 <View style={{height: 250, marginTop: '25%'}}>
@@ -235,6 +238,72 @@ export default class CustomerList extends Component {
               )}
               keyExtractor={item => item.id}
             />
+        </View>
+      }
+
+            {global.user_name == 'admin' &&
+            <View>
+            {this.state.customer_lists == null && (
+              <View>
+                <View style={{height: 250, marginTop: '25%'}}>
+                  <LottieView source={no_data} autoPlay loop />
+                </View>
+                <Text
+                  style={{
+                    alignSelf: 'center',
+                    fontFamily: font_title,
+                    fontSize: 15,
+                  }}>
+                  No Customers Found!
+                </Text>
+              </View>
+            )}
+             <FlatList
+              threshold={20}
+              data={this.state.customer_lists}
+              renderItem={({item, index}) => (
+                <List>
+                  <ListItem avatar>
+                    <TouchableOpacity
+                      onPress={() => this.customer_details(item.id)}
+                      activeOpacity={1}>
+                      {(item.gender == 'Male' || item.gender == 'male') && (
+                        <Left>
+                          <Thumbnail source={customer_icon} />
+                        </Left>
+                      )}
+                      {(item.gender == 'female' || item.gender == 'Female') && (
+                        <Left>
+                          <Thumbnail source={user} />
+                        </Left>
+                      )}
+                    </TouchableOpacity>
+                    <Body>
+                      <Text style={{fontFamily: font_title, fontSize: 18}}>
+                        {item.customer_name}
+                      </Text>
+                      <Text note style={{fontFamily: font_description}}>
+                        {item.contact_no}
+                      </Text>
+                       <Text note style={{fontFamily: font_title}}>
+                        Code: {item.customer_code}
+                      </Text>
+                    </Body>
+
+                    {/* <Icn
+                          style={{paddingLeft:5}}
+                          name='trash-o'
+                          type='font-awesome'
+                          size={28}
+                          color='#000000'
+                        />  */}
+                  </ListItem>
+                </List>
+              )}
+              keyExtractor={item => item.id}
+            />
+            </View>
+          }
           </Content>
         </ScrollView>
       </Container>

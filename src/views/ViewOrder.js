@@ -21,6 +21,7 @@ import {
   show_all_measurements,
   font_title,
   font_description,
+  no_data,
 } from '../config/Constants';
 import axios from 'axios';
 import Snackbar from 'react-native-snackbar';
@@ -31,6 +32,7 @@ import RadioForm, {
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import {CommonActions} from '@react-navigation/native'; 
+import LottieView from 'lottie-react-native';
 
 export default class ViewOrder extends Component {
   constructor(props) {
@@ -84,7 +86,7 @@ export default class ViewOrder extends Component {
                 height: '100%',
                 width: '15%',
                 alignSelf: 'center',
-                justifyContent: 'center',
+                justifyContent: 'center', 
               }}>
               <Left style={styles.header}>
                 <Icon
@@ -103,11 +105,26 @@ export default class ViewOrder extends Component {
             </Col>
           </Row> 
         </Header>
+          {this.state.order_datas == '' && (
+            <View>
+              <View style={{height: 250, marginTop: '40%'}}>
+                <LottieView source={no_data} autoPlay loop />
+              </View>
+                 <Text
+                  style={{
+                    alignSelf: 'center',
+                    fontFamily: font_title,
+                    fontSize: 15,
+                  }}>
+                  No Orders Available!
+                </Text>  
+            </View>
+          )}
           <FlatList
               data={this.state.order_datas}
               renderItem={({item, index}) => (
                 <Content>
-               
+                
                   <List>
                     <ListItem itemDivider>
                       <Row>
