@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Keyboard} from 'react-native';
+import {View, Text, StyleSheet,Picker,Keyboard} from 'react-native';
 import {
   Content,
   Container,
@@ -11,7 +11,7 @@ import {
   Col,
   Card,
 } from 'native-base';
-import {Icon as Icn, Button} from 'react-native-elements';
+import {Icon as Icn, Button} from 'react-native-elements'; 
 import {
   api_url,
   show_all_measurements,
@@ -19,6 +19,7 @@ import {
   show_customers,
   show_all_status,
   show_today_by_date,
+  show_branches,
   font_title,
   font_description,
 } from '../config/Constants';
@@ -43,6 +44,9 @@ export default class Reports extends Component {
       total_count: 0,
       taken_on: '',
       branch: '',
+      branch_lists: [],
+      branch_name:'',
+      branch_name2:'',
       todayDatePickerVisible: false,
       fromDatePickerVisible: false,
       toDatePickerVisible: false,
@@ -50,6 +54,7 @@ export default class Reports extends Component {
       from_date: '',
       to_date: '',
     };
+    this.show_branches();
   }
 
   async componentDidMount() {
@@ -197,12 +202,12 @@ export default class Reports extends Component {
   saveFromDate = async () => {
     await AsyncStorage.setItem('user_id', this.state.from_date.toString());
     await AsyncStorage.setItem(
-      'branch_type2',
-      this.state.branch_type2.toString(),
+      'branch_name2',
+      this.state.branch_name2.toString(),
     );
     global.from_date = await this.state.from_date;
-    global.branch_type2 = await this.state.branch_type2;
-    if (global.branch_type2 != null) {
+    global.branch_name2 = await this.state.branch_name2;
+    if (global.branch_name2 != null) {
       await this.order_details();
     } else {
       alert('select branch');
@@ -216,7 +221,7 @@ export default class Reports extends Component {
       url: api_url + show_count_by_date,
       data: {
         taken_on: Moment(this.state.from_date).format('YYYY-MM-DD'),
-        branch: this.state.branch_type2,
+        branch: this.state.branch_name2,
       },
     })
       .then(async response => {
@@ -235,7 +240,7 @@ export default class Reports extends Component {
       url: api_url + show_today_by_date,
       data: {
         taken_on: Moment(global.today_date).format('YYYY-MM-DD'),
-        branch: this.state.branch,
+        branch: this.state.branch_name,
       },
     })
       .then(async response => {
@@ -283,6 +288,24 @@ export default class Reports extends Component {
         this.setState({all_sales_count: response.data.count});
       })
       .catch(error => {
+        this.showSnackbar('Something went wrong');
+      });
+  };
+
+  show_branches = async () => {
+    Keyboard.dismiss();
+    this.setState({isLoding: true});
+    await axios({
+      method: 'get',
+      url: api_url + show_branches,
+    })
+      .then(async response => {
+        this.setState({isLoding: false, branch_lists: response.data.result});
+        //alert(JSON.stringify(response));
+      })
+      .catch(error => {
+        this.setState({isLoding: false});
+        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
@@ -367,39 +390,23 @@ export default class Reports extends Component {
               <Col
                 style={{
                   height: '100%',
-                  width: '30%',
+                  width: '50%',
                   alignSelf: 'center',
                   marginTop: '5%',
                 }}>
-                <Menu
-                  style={{width: '60%'}}
-                  ref={this.setMenuRef}
-                  button={
-                    <Text
-                      onPress={this.showMenu}
-                      style={{
-                        color: colors.theme_bg,
-                        fontSize: 15,
-                        fontFamily: font_title,
-                      }}>
-                      Select Branch
-                    </Text>
-                  }>
-                  <MenuItem onPress={this.hideMenu1}>Main Branch</MenuItem>
-
-                  <MenuDivider />
-
-                  <MenuItem onPress={this.hideMenu2}>Sub Branch</MenuItem>
-                </Menu>
-                <Text
-                  style={{
-                    fontSize: 20,
-                    marginTop: 5,
-                    fontFamily: font_title,
-                    alignSelf: 'center',
-                  }}>
-                  {this.state.branch}
-                </Text>
+                 
+                  <Picker style={{width:'100%',left:30}}
+                    selectedValue={this.state.language}
+                    onValueChange={(itemValue, itemPosition) =>
+                      this.setState({ branch_name: itemValue, choosenIndex: itemPosition })
+                    }
+                  > 
+                  <Picker.Item label='Choose Branch' value='Choose Here' />  
+                   {this.state.branch_lists.map((row, index) => (
+                      <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
+                    ))} 
+                  </Picker>
+                    
               </Col>
             </Row>
           </View>
@@ -641,42 +648,24 @@ export default class Reports extends Component {
                 </Text>
               )}
             </Col>
-            <Col
-              style={{
-                height: '100%',
-                width: '30%',
-                alignSelf: 'center',
-                marginTop: '5%',
-              }}>
-              <Menu
-                style={{width: '60%'}}
-                ref={this.setMenuRef2}
-                button={
-                  <Text
-                    onPress={this.showMenu2}
-                    style={{
-                      color: colors.theme_bg,
-                      fontSize: 15,
-                      fontFamily: font_title,
-                    }}>
-                    Select Branch
-                  </Text>
-                }>
-                <MenuItem onPress={this.hideMenu3}>Main Branch</MenuItem>
-
-                <MenuDivider />
-
-                <MenuItem onPress={this.hideMenu4}>Sub Branch</MenuItem>
-              </Menu>
-              <Text
+             <Col
                 style={{
-                  fontSize: 20,
-                  marginTop: 5,
-                  fontFamily: font_title,
+                  height: '100%',
+                  width: '50%',
                   alignSelf: 'center',
+                  marginTop: '5%',
                 }}>
-                {this.state.branch_type2}
-              </Text>
+                <Picker style={{width:'80%'}}
+                    selectedValue={this.state.language}
+                    onValueChange={(itemValue, itemPosition) =>
+                      this.setState({ branch_name2: itemValue, choosenIndex: itemPosition })
+                    }
+                  > 
+                  <Picker.Item label='Branch' value='Choose Here' />  
+                   {this.state.branch_lists.map((row, index) => (
+                      <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
+                    ))} 
+                  </Picker>
             </Col>
           </Row>
           <Card
@@ -757,7 +746,7 @@ export default class Reports extends Component {
                         alignSelf: 'center',
                         fontFamily: font_description,
                       }}>
-                      $0
+                      {(this.state.all_sales_count - this.state.payment_received_count)}
                     </Text>
                     <Text
                       style={{
@@ -803,6 +792,11 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 18,
   },
+  pickerStyle:{  
+    height: 60,  
+    width: "60%",  
+    color: '#344953',  
+  },  
   btn: {
     borderColor: colors.theme_white,
     backgroundColor: colors.theme_white,

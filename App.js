@@ -30,6 +30,7 @@ import ViewMeasurementDetails from './src/views/ViewMeasurementDetails';
 import UpdateOrderStatus from './src/views/UpdateOrderStatus';
 import CustomerDetails from './src/views/CustomerDetails';
 import CustomerList from './src/views/CustomerList';
+import AllCustomerLists from './src/views/AllCustomerLists';
 import Measurements from './src/views/Measurements';
 
 import Logout from './src/views/Logout';
@@ -103,6 +104,17 @@ function MyDrawer() {
       />
       }
      {global.user_name == 'admin' &&
+      <Drawer.Screen
+        name="Add Customer"
+        component={AllCustomerLists}
+        options={{ 
+          drawerIcon: ({ tintColor }) => (
+              <Icn name='users' type='font-awesome' color={colors.theme_fg} size={25} />
+          ),
+        }}
+      />
+      }
+      {global.user_name != 'admin' &&
       <Drawer.Screen
         name="Add Customer"
         component={CustomerList}
@@ -251,6 +263,7 @@ function App() {
         <Stack.Screen name="CustomerDetails" component={CustomerDetails} />
         <Stack.Screen name="ViewMeasurementDetails" component={ViewMeasurementDetails} />
         <Stack.Screen name="UpdateOrderStatus" component={UpdateOrderStatus} />
+        <Stack.Screen name="AllCustomerLists" component={AllCustomerLists} />
         <Stack.Screen name="CustomerList" component={CustomerList} />
         <Stack.Screen name="Measurements" component={Measurements} />
 

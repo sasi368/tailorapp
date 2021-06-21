@@ -124,7 +124,7 @@ export default class AddBranches extends Component<props> {
           <Loader visible={this.state.isLoding} />
           <Row>
             <Col
-              style={{
+              style={{ 
                 height: '100%',
                 width: '15%',
                 alignSelf: 'center',
@@ -142,7 +142,7 @@ export default class AddBranches extends Component<props> {
             </Col>
             <Col style={{height: '100%', width: '85%', alignSelf: 'center'}}>
               <Body>
-                <Title style={styles.title}>Enter Customer Details</Title>
+                <Title style={styles.title}>Add Branch</Title>
               </Body>
             </Col>
           </Row>
@@ -157,8 +157,11 @@ export default class AddBranches extends Component<props> {
                 padding: 5,
                 fontFamily: font_title,
               }}>
-              Enter Branch Details
+              Enter Branch Name
             </Text>
+          </View>
+          <View>
+             <Icon name="shop" type="entypo" size={160} color="#000000" />
           </View>
           <View>
             <TextInput

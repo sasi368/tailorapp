@@ -41,7 +41,7 @@ const customStyles = {
   stepIndicatorLabelFinishedColor: '#ffffff',
   stepIndicatorLabelUnFinishedColor: '#aaaaaa',
   labelColor: '#999999',
-  labelSize: 18,
+  labelSize: 20,
   currentStepLabelColor: colors.theme_bg,
 };
 export default class Tracking extends Component {
@@ -82,7 +82,7 @@ export default class Tracking extends Component {
         }
       })
       .catch(error => {
-        this.showSnackbar('Order id not found');
+        this.showSnackbar('No Update Status Available');
       });
   };
 
@@ -129,6 +129,7 @@ export default class Tracking extends Component {
           </Row>
         </Header>
 
+        {this.state.customer_name != null &&
         <View style={{padding: 15}}>
           {this.state.customer_name != null && (
             <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
@@ -146,7 +147,7 @@ export default class Tracking extends Component {
             </Text>
           )}
         </View>
-
+      }
       
         <View style={styles.container}>
           <View style={styles.stepIndicator}>

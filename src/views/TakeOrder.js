@@ -62,6 +62,7 @@ export default class TakeOrder extends Component<props> {
       pant: '',
       seat: '',
       paincha: '',
+      customer_branch:'',
       service_name: '',
       choosenIndex:0,
       choosenIndex2:0,
@@ -122,7 +123,7 @@ export default class TakeOrder extends Component<props> {
         customer_code: this.state.customer_code,
         customer_name: this.state.customer_name,
         service_name: this.state.service_name,
-        service_price: 100,
+        service_price: this.state.service_price,
         shirt_length: this.state.shirt_length,
         arm_length: this.state.arm_length,
         shoulder: this.state.shoulder,
@@ -135,7 +136,7 @@ export default class TakeOrder extends Component<props> {
         pant: this.state.pant,
         seat: this.state.seat,
         paincha: this.state.paincha,
-        branch: global.branch,
+        branch: this.state.customer_branch,
       },
     })
       .then(async response => {
@@ -165,12 +166,12 @@ export default class TakeOrder extends Component<props> {
       },
     })
       .then(async response => {
-        this.setState({isLodingContent: false, show_customers_by_code: response.data.result});
+        this.setState({isLodingContent: false, show_customers_by_code: response.data.result, customer_branch: response.data.result[0].branch});
       })
       .catch(error => {
         this.setState({isLodingContent: false});
         //alert(error);
-        this.showSnackbar('Something went wrong');
+        //this.showSnackbar('Something went wrong');
       });
   };
 
@@ -299,12 +300,23 @@ export default class TakeOrder extends Component<props> {
                       this.setState({ service_name: itemValue,choosenIndex: itemPosition })
                     }
                   >   
-                  <Picker.Item label='SELECT SERVICE' value='Choose Here' />
+                  <Picker.Item label='SERVICE NAME' value='Choose Here' />
                    {this.state.services_lists.map((row, index) => (
                       <Picker.Item key={row.id} label={row.service_name} value={row.service_name} />
                     ))} 
                   </Picker>
-       
+
+                  <Picker style={styles.pickerStyle}
+                    selectedValue={this.state.language}
+                    onValueChange={(itemValue, itemPosition) =>
+                      this.setState({ service_price: itemValue,choosenIndex: itemPosition })
+                    }
+                  >   
+                  <Picker.Item label='SERVICE PRICE' value='Choose Here' />
+                   {this.state.services_lists.map((row, index) => (
+                      <Picker.Item key={row.id} label={row.service_price} value={row.service_price} />
+                    ))} 
+                  </Picker>
           </View>
           <View>
           <View style={{alignSelf:'center'}}>

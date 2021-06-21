@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#D1EDF2',
   },  
   pickerStyle:{  
-    height: 70,  
+    height: 60,  
     width: "100%",  
     color: '#344953',  
     justifyContent: 'center',  

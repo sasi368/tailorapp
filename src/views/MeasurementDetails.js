@@ -10,7 +10,7 @@ import {
   show_all_status,
   no_data,
   add_tracking,
-  show_tracking_position,
+  show_tracking_position, 
   font_title,
   font_description,
 } from '../config/Constants';
@@ -47,7 +47,7 @@ export default class MeasurementDetails extends Component<props> {
   async componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.show_measurement_details();
-    });
+    }); 
   }
 
   componentWillUnmount() {
@@ -57,7 +57,7 @@ export default class MeasurementDetails extends Component<props> {
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
   };
-
+/*
   view_track = (customer_name, service_name, taken_on) => {
     this.props.navigation.navigate('Tracking', {
       customer_name: customer_name,
@@ -65,7 +65,7 @@ export default class MeasurementDetails extends Component<props> {
       taken_on: taken_on,
     });
   };
-
+*/
   show_measurement_details = async () => {
     Keyboard.dismiss();
     await axios({

@@ -61,7 +61,7 @@ export default class ViewOrder extends Component {
       url: api_url + show_all_measurements,
     })
       .then(async response => {
-        //alert(JSON.stringify(response));
+       // alert(JSON.stringify(response));
         this.setState({order_datas: response.data.result});
       })
       .catch(error => {
