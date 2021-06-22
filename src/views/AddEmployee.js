@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Keyboard,Picker} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Keyboard,
+  Picker,
+} from 'react-native';
 import {
   Content,
   Container,
@@ -15,6 +23,7 @@ import * as colors from '../assets/css/Colors';
 import {
   api_url,
   add_employee,
+  emp_img,
   show_branches,
   font_title,
   font_description,
@@ -22,21 +31,10 @@ import {
 import axios from 'axios';
 import Snackbar from 'react-native-snackbar';
 import {StatusBar, Loader} from '../components/GeneralComponents';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
-import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 import {CommonActions} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
-var radio_props = [
-  {label: 'Male', value: 'Male'},
-  {label: 'Female', value: 'Female'},
-];
-
-export default class AddEmployee extends Component<props> {
-  _menu = null;
+export default class AddEmployee extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -44,31 +42,13 @@ export default class AddEmployee extends Component<props> {
       user_name: '',
       branch: '',
       password: '',
-      choosenIndex:0,
+      choosenIndex: 0,
       branch_lists: [],
       validation: false,
       isLoding: false,
     };
-    this.show_branches(); 
+    this.show_branches();
   }
-
-  setMenuRef = ref => {
-    this._menu = ref;
-  };
-
-  hideMenu1 = () => {
-    this._menu.hide();
-    this.setState({branch: 'MainBranch'});
-  };
-
-  hideMenu2 = () => {
-    this._menu.hide();
-    this.setState({branch: 'SubBranch'});
-  };
-
-  showMenu = () => {
-    this._menu.show();
-  };
 
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
@@ -83,11 +63,9 @@ export default class AddEmployee extends Component<props> {
     })
       .then(async response => {
         this.setState({isLoding: false, branch_lists: response.data.result});
-        //alert(JSON.stringify(response));
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
@@ -110,8 +88,11 @@ export default class AddEmployee extends Component<props> {
           this.setState({isLoding: false});
           if (response.data.status == 1 && this.state.choosenIndex == 0) {
             alert('Select any Branch');
-          }else if(response.data.status == 1 && this.state.choosenIndex != 0){
-             await this.alert_func();
+          } else if (
+            response.data.status == 1 &&
+            this.state.choosenIndex != 0
+          ) {
+            await this.alert_func();
           } else {
             alert(response.data.message);
           }
@@ -123,7 +104,6 @@ export default class AddEmployee extends Component<props> {
         });
     }
   };
-
 
   checkValidate() {
     if (this.state.user_name == '') {
@@ -212,6 +192,9 @@ export default class AddEmployee extends Component<props> {
               Enter Employee Details
             </Text>
           </View>
+          <View style={styles.image_view}>
+            <LottieView source={emp_img} autoPlay loop={true} />
+          </View>
           <View>
             <TextInput
               style={styles.textin}
@@ -222,18 +205,24 @@ export default class AddEmployee extends Component<props> {
             />
           </View>
           <View style={{paddingLeft: '13%'}}>
-         <Picker style={styles.pickerStyle}
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ branch_name: itemValue, choosenIndex: itemPosition })
-                    }
-                  >   
-                  <Picker.Item label='SELECT BRANCH' value='Choose Here' />
-                   {this.state.branch_lists.map((row, index) => (
-                      <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
-                    ))} 
-                  </Picker>
-       
+            <Picker
+              style={styles.pickerStyle}
+              selectedValue={this.state.language}
+              onValueChange={(itemValue, itemPosition) =>
+                this.setState({
+                  branch_name: itemValue,
+                  choosenIndex: itemPosition,
+                })
+              }>
+              <Picker.Item label="SELECT BRANCH" value="Choose Here" />
+              {this.state.branch_lists.map((row, index) => (
+                <Picker.Item
+                  key={row.id}
+                  label={row.branch_name}
+                  value={row.branch_name}
+                />
+              ))}
+            </Picker>
           </View>
           <View>
             <TextInput
@@ -291,12 +280,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
   },
-   pickerStyle:{  
-    height: 70,  
-    width: "80%",  
-    color: '#344953',  
-    justifyContent: 'center',  
-  },  
+  pickerStyle: {
+    height: 70,
+    width: '80%',
+    color: '#344953',
+    justifyContent: 'center',
+  },
   btn: {
     width: 250,
     margin: 30,
@@ -305,5 +294,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.theme_bg,
     borderRadius: 20,
     alignSelf: 'center',
+  },
+  image_view: {
+    alignSelf: 'center',
+    height: 200,
+    width: 300,
   },
 });

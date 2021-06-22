@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {CommonActions} from '@react-navigation/native';
 import {splash_img} from '../config/Constants';
 import * as colors from '../assets/css/Colors';
@@ -7,8 +7,6 @@ import AsyncStorage from '@react-native-community/async-storage';
 import LottieView from 'lottie-react-native';
 
 export default class Splash extends Component {
-
-
   home = async () => {
     const user_id = await AsyncStorage.getItem('user_id');
     const user_name = await AsyncStorage.getItem('user_name');
@@ -28,7 +26,7 @@ export default class Splash extends Component {
     } else {
       global.id = '';
       this.props.navigation.dispatch(
-        CommonActions.reset({ 
+        CommonActions.reset({
           index: 0,
           routes: [{name: 'SelectBranch'}],
         }),
@@ -40,17 +38,15 @@ export default class Splash extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.image_view}>
-          
-         <LottieView
-                    source={splash_img}
-                    autoPlay 
-                    loop={false}
-                    speed={1.9}
-                    onAnimationFinish={() => {
-                        this.home();
-                    }}  
-                />
-         
+          <LottieView
+            source={splash_img}
+            autoPlay
+            loop={false}
+            speed={1.9}
+            onAnimationFinish={() => {
+              this.home();
+            }}
+          />
         </View>
       </View>
     );

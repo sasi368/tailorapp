@@ -30,7 +30,6 @@ export default class Login extends Component {
       validation: false,
       isLoding: false,
     };
-    //alert(this.state.branch);
   }
 
   handleBackButtonClick = () => {
@@ -61,7 +60,6 @@ export default class Login extends Component {
       })
         .then(async response => {
           this.setState({isLoding: false});
-          //alert(JSON.stringify(response));
           if (
             (response.data.status == 1 &&
               response.data.result.branch == this.state.branch) ||
@@ -76,7 +74,6 @@ export default class Login extends Component {
         })
         .catch(error => {
           this.setState({isLoding: false});
-          //alert(error);
           this.showSnackbar('Something went wrong');
         });
     }
@@ -158,24 +155,27 @@ export default class Login extends Component {
             <Text style={styles.txt_style}>Enter user name </Text>
             <Text style={styles.txt_style}>and password</Text>
           </View>
-          <View style={styles.margin_10} />
-          <Input
-            placeholder="Enter your name"
-            label={'User Name'}
-            leftIcon={<Icon name="user" size={24} color="black" />}
-            onChangeText={TextInputValue =>
-              this.setState({user_name: TextInputValue})
-            }
-          />
-          <Input
-            label={'Password'}
-            placeholder="Enter your password"
-            secureTextEntry={this.state.password.length === 0 ? false : true}
-            leftIcon={<Icon name="lock" size={24} color="black" />}
-            onChangeText={TextInputValue =>
-              this.setState({password: TextInputValue})
-            }
-          />
+          <View>
+            <Input
+              placeholder="Enter your name"
+              label={'User Name'}
+              leftIcon={<Icon name="user" size={24} color="black" />}
+              onChangeText={TextInputValue =>
+                this.setState({user_name: TextInputValue})
+              }
+            />
+
+            <Input
+              placeholder="******"
+              label={'Password'}
+              secureTextEntry={true}
+              inputContainerStyle={{color: 'black'}}
+              leftIcon={<Icon name="lock" size={24} color="black" />}
+              onChangeText={TextInputValue =>
+                this.setState({password: TextInputValue})
+              }
+            />
+          </View>
           <View style={styles.margin_10} />
           <Button
             title="Login"
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   inputStyle: {
-    fontSize: 18
+    fontSize: 18,
   },
   margin_10: {
     margin: 10,

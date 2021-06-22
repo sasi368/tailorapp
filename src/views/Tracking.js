@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, TextInput, Text, Keyboard} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {Container, Header, Row, Col, Left, Body, Title} from 'native-base';
-import {Button, Icon as Icn} from 'react-native-elements';
+import {Icon as Icn} from 'react-native-elements';
 import * as colors from '../assets/css/Colors';
 import StepIndicator from 'react-native-step-indicator';
 import axios from 'axios';
@@ -10,7 +10,6 @@ import Snackbar from 'react-native-snackbar';
 import {
   api_url,
   show_order_status,
-  font_title, 
   font_description,
 } from '../config/Constants';
 
@@ -49,7 +48,7 @@ export default class Tracking extends Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      order_id:this.props.route.params.order_id,
+      order_id: this.props.route.params.order_id,
       isLoding: false,
     };
     this.show_order_status();
@@ -62,7 +61,7 @@ export default class Tracking extends Component {
   show_order_status = async () => {
     this.setState({isLoding: true});
     await axios({
-      method: 'post', 
+      method: 'post',
       url: api_url + show_order_status,
       data: {
         id: this.state.order_id,
@@ -85,7 +84,6 @@ export default class Tracking extends Component {
         this.showSnackbar('No Update Status Available');
       });
   };
-
 
   showSnackbar(msg) {
     Snackbar.show({
@@ -129,26 +127,26 @@ export default class Tracking extends Component {
           </Row>
         </Header>
 
-        {this.state.customer_name != null &&
-        <View style={{padding: 15}}>
-          {this.state.customer_name != null && (
-            <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
-              Customer Name: {this.state.customer_name}
-            </Text>
-          )}
-          {this.state.customer_name != null && (
-            <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
-              Service Name: {this.state.service_name}
-            </Text>
-          )}
-          {this.state.customer_name != null && (
-            <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
-              Employee Name: {this.state.employee_name}
-            </Text>
-          )}
-        </View>
-      }
-      
+        {this.state.customer_name != null && (
+          <View style={{padding: 15}}>
+            {this.state.customer_name != null && (
+              <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
+                Customer Name: {this.state.customer_name}
+              </Text>
+            )}
+            {this.state.customer_name != null && (
+              <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
+                Service Name: {this.state.service_name}
+              </Text>
+            )}
+            {this.state.customer_name != null && (
+              <Text style={{color: 'gray', fontSize: 15, margin: 5}}>
+                Employee Name: {this.state.employee_name}
+              </Text>
+            )}
+          </View>
+        )}
+
         <View style={styles.container}>
           <View style={styles.stepIndicator}>
             <StepIndicator
@@ -156,7 +154,6 @@ export default class Tracking extends Component {
               currentPosition={this.state.order_result}
               labels={labels}
               direction="vertical"
-              //onPress={this.onPageChange}
             />
           </View>
         </View>

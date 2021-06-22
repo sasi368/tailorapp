@@ -39,7 +39,7 @@ const options = {
   chooseFromLibraryButtonTitle: 'Choose from gallery',
 };
 
-export default class AddServices extends Component<props> {
+export default class AddServices extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -67,7 +67,6 @@ export default class AddServices extends Component<props> {
         this.setState({
           data: response.data,
         });
-        //this.props.updateProfilePicture(source);
         this.serviceimageupdate();
       }
     });

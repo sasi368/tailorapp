@@ -3,12 +3,10 @@ import {
   View,
   StyleSheet,
   Text,
-  ScrollView, 
+  ScrollView,
   Image,
   Dimensions,
-  TouchableOpacity,
   Keyboard,
-  FlatList,
   Picker,
 } from 'react-native';
 import {Content, CardItem, Card, Body} from 'native-base';
@@ -21,35 +19,33 @@ import {
   font_description,
   profile_icon,
   branch_logo,
-  font_title,
 } from '../config/Constants';
 import {StatusBar, Loader} from '../components/GeneralComponents';
 import Snackbar from 'react-native-snackbar';
-import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 
 const win = Dimensions.get('window');
 const ratio = win.width / 541;
 
-
 export default class SelectBranch extends Component {
-  _menu = null;
   constructor(props) {
     super(props);
     this.state = {
       branch_lists: [],
       branch: '',
-      branch_name:'',
-      language:'',
-      choosenIndex:0,
+      branch_name: '',
+      language: '',
+      choosenIndex: 0,
       pickedData: null,
       validation: false,
       isLoding: false,
     };
-    this.show_branches(); 
+    this.show_branches();
   }
 
   login = () => {
-    this.props.navigation.navigate('Login', {branch_name: this.state.branch_name});
+    this.props.navigation.navigate('Login', {
+      branch_name: this.state.branch_name,
+    });
   };
 
   services = () => {
@@ -65,15 +61,12 @@ export default class SelectBranch extends Component {
     })
       .then(async response => {
         this.setState({isLoding: false, branch_lists: response.data.result});
-        //alert(JSON.stringify(response));
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
- 
 
   drpFrame(style) {
     style.width = width - 60;
@@ -109,31 +102,35 @@ export default class SelectBranch extends Component {
                 <Text style={{fontSize: 30, fontFamily: font_description}}>
                   Select Branch
                 </Text>
-   
               </CardItem>
-           
+
               <CardItem>
                 <Body>
-                  
-                  <Picker style={styles.pickerStyle}
+                  <Picker
+                    style={styles.pickerStyle}
                     selectedValue={this.state.language}
                     onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ branch_name: itemValue, choosenIndex: itemPosition })
-                    }
-                  >   
-                  <Picker.Item label='Choose Here' value='Choose Here' />
-                   {this.state.branch_lists.map((row, index) => (
-                      <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
-                    ))} 
+                      this.setState({
+                        branch_name: itemValue,
+                        choosenIndex: itemPosition,
+                      })
+                    }>
+                    <Picker.Item label="Choose Here" value="Choose Here" />
+                    {this.state.branch_lists.map((row, index) => (
+                      <Picker.Item
+                        key={row.id}
+                        label={row.branch_name}
+                        value={row.branch_name}
+                      />
+                    ))}
                   </Picker>
-                 
                 </Body>
               </CardItem>
-            
+
               <CardItem
                 footer
                 style={{borderBottomLeftRadius: 8, borderBottomRightRadius: 8}}>
-                  {this.state.choosenIndex != 0 && 
+                {this.state.choosenIndex != 0 && (
                   <Button
                     title="Next"
                     buttonStyle={{
@@ -144,7 +141,7 @@ export default class SelectBranch extends Component {
                     }}
                     onPress={this.login}
                   />
-                }
+                )}
               </CardItem>
             </Card>
 
@@ -198,11 +195,11 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: '#D1EDF2',
     backgroundColor: '#D1EDF2',
-  },  
-  pickerStyle:{  
-    height: 60,  
-    width: "100%",  
-    color: '#344953',  
-    justifyContent: 'center',  
-  }  
+  },
+  pickerStyle: {
+    height: 60,
+    width: '100%',
+    color: '#344953',
+    justifyContent: 'center',
+  },
 });

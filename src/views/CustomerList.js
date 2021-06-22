@@ -13,7 +13,7 @@ import {
   Row,
   Col,
   Content,
-  Body, 
+  Body,
   Title,
   Container,
   Left,
@@ -47,8 +47,6 @@ export default class CustomerList extends Component {
       validation: false,
       isLoding: false,
     };
-    //alert(global.branch);
-   /* this.show_customer();*/
   }
 
   async componentDidMount() {
@@ -85,10 +83,9 @@ export default class CustomerList extends Component {
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
-  }; 
+  };
 
   show_customers_by_branch = async () => {
     Keyboard.dismiss();
@@ -101,11 +98,13 @@ export default class CustomerList extends Component {
       },
     })
       .then(async response => {
-        this.setState({isLoding: false, show_customers_by_branch: response.data.result});
+        this.setState({
+          isLoding: false,
+          show_customers_by_branch: response.data.result,
+        });
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
@@ -176,7 +175,7 @@ export default class CustomerList extends Component {
             </View>
             <View style={{margin: 10}} />
 
-           {this.state.show_customers_by_branch == '' && (
+            {this.state.show_customers_by_branch == '' && (
               <View>
                 <View style={{height: 250, marginTop: '25%'}}>
                   <LottieView source={no_data} autoPlay loop />
@@ -192,7 +191,7 @@ export default class CustomerList extends Component {
               </View>
             )}
 
-             {this.state.show_customers_by_branch == null && (
+            {this.state.show_customers_by_branch == null && (
               <View>
                 <View style={{height: 250, marginTop: '25%'}}>
                   <LottieView source={no_data} autoPlay loop />
@@ -207,7 +206,7 @@ export default class CustomerList extends Component {
                 </Text>
               </View>
             )}
-          
+
             <FlatList
               threshold={20}
               data={this.state.show_customers_by_branch}
@@ -235,18 +234,16 @@ export default class CustomerList extends Component {
                       <Text note style={{fontFamily: font_description}}>
                         {item.contact_no}
                       </Text>
-                       <Text note style={{fontFamily: font_title}}>
+                      <Text note style={{fontFamily: font_title}}>
                         Code: {item.customer_code}
                       </Text>
                     </Body>
                   </ListItem>
                 </List>
-                
               )}
               keyExtractor={item => item.id}
             />
-
-               </Content>
+          </Content>
         </ScrollView>
       </Container>
     );

@@ -14,27 +14,18 @@ import {Button, Icon} from 'react-native-elements';
 import * as colors from '../assets/css/Colors';
 import {
   api_url,
-  show_branches,
   add_branches,
   font_title,
+  store_img,
   font_description,
 } from '../config/Constants';
 import axios from 'axios';
 import Snackbar from 'react-native-snackbar';
 import {StatusBar, Loader} from '../components/GeneralComponents';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
 import {CommonActions} from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
-var radio_props = [
-  {label: 'Male', value: 'Male'},
-  {label: 'Female', value: 'Female'},
-];
-
-export default class AddBranches extends Component<props> {
+export default class AddBranches extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -63,11 +54,11 @@ export default class AddBranches extends Component<props> {
       })
         .then(async response => {
           this.setState({isLoding: false});
-          if(response.data.status == 0){
+          if (response.data.status == 0) {
             alert(response.data.message);
-          }else{
+          } else {
             await this.alert_func();
-          }   
+          }
         })
         .catch(error => {
           this.setState({isLoding: false});
@@ -97,7 +88,7 @@ export default class AddBranches extends Component<props> {
     ]);
 
   report_src = () => {
-     this.props.navigation.dispatch(
+    this.props.navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{name: 'Reports'}],
@@ -124,7 +115,7 @@ export default class AddBranches extends Component<props> {
           <Loader visible={this.state.isLoding} />
           <Row>
             <Col
-              style={{ 
+              style={{
                 height: '100%',
                 width: '15%',
                 alignSelf: 'center',
@@ -160,8 +151,8 @@ export default class AddBranches extends Component<props> {
               Enter Branch Name
             </Text>
           </View>
-          <View>
-             <Icon name="shop" type="entypo" size={160} color="#000000" />
+          <View style={styles.image_view}>
+            <LottieView source={store_img} autoPlay loop={true} />
           </View>
           <View>
             <TextInput
@@ -219,12 +210,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   btn: {
-    width: 250,
+    width: 200,
     margin: 30,
     borderWidth: 2,
     borderColor: colors.theme_bg,
     backgroundColor: colors.theme_bg,
-    borderRadius: 20,
+    borderRadius: 15,
     alignSelf: 'center',
+  },
+  image_view: {
+    alignSelf: 'center',
+    height: 200,
+    width: 300,
   },
 });

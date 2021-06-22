@@ -50,7 +50,9 @@ export const cuff = require('.././assets/img/cuff.png');
 
 export const splash_img = require('.././assets/json/splash.json'); 
 export const no_data = require('.././assets/json/no_data.json'); 
-export const please_wait = require('.././assets/json/please_wait.json'); 
+export const please_wait = require('.././assets/json/please_wait.json');
+export const store_img = require('.././assets/json/store_img.json'); 
+export const emp_img = require('.././assets/json/emp_img.json'); 
 
 //Size
 export const screenHeight = Math.round(Dimensions.get('window').height);

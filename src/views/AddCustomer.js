@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Keyboard, Picker } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Keyboard,
+  Picker,
+} from 'react-native';
 import {
   Content,
   Container,
@@ -34,7 +42,7 @@ var radio_props = [
   {label: 'Female', value: 'Female'},
 ];
 
-export default class AddCustomer extends Component<props> {
+export default class AddCustomer extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -47,11 +55,11 @@ export default class AddCustomer extends Component<props> {
       contact_no: '',
       address: '',
       value: '',
-      choosenIndex:0,
+      choosenIndex: 0,
       validation: false,
       isLoding: false,
     };
-    this.show_branches(); 
+    this.show_branches();
   }
 
   handleBackButtonClick = () => {
@@ -77,11 +85,11 @@ export default class AddCustomer extends Component<props> {
       })
         .then(async response => {
           this.setState({isLoding: false});
-          if(response.data.status == 0){
+          if (response.data.status == 0) {
             alert(response.data.message);
-          }else{
+          } else {
             await this.alert_func();
-          }   
+          }
         })
         .catch(error => {
           this.setState({isLoding: false});
@@ -89,7 +97,6 @@ export default class AddCustomer extends Component<props> {
         });
     }
   };
-
 
   show_branches = async () => {
     Keyboard.dismiss();
@@ -100,11 +107,9 @@ export default class AddCustomer extends Component<props> {
     })
       .then(async response => {
         this.setState({isLoding: false, branch_lists: response.data.result});
-        //alert(JSON.stringify(response));
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
@@ -150,7 +155,7 @@ export default class AddCustomer extends Component<props> {
     ]);
 
   customer_list = () => {
-     this.props.navigation.dispatch(
+    this.props.navigation.dispatch(
       CommonActions.reset({
         index: 0,
         routes: [{name: 'Reports'}],
@@ -256,22 +261,31 @@ export default class AddCustomer extends Component<props> {
             />
           </View>
           <View style={{paddingLeft: '13%'}}>
-           <Picker style={styles.pickerStyle}
+            <Picker
+              style={styles.pickerStyle}
               selectedValue={this.state.language}
               onValueChange={(itemValue, itemPosition) =>
-                  this.setState({ branch_name: itemValue, choosenIndex: itemPosition })
-              }
-           >   
-          <Picker.Item label='SELECT BRANCH' value='Choose Here' />
+                this.setState({
+                  branch_name: itemValue,
+                  choosenIndex: itemPosition,
+                })
+              }>
+              <Picker.Item label="SELECT BRANCH" value="Choose Here" />
               {this.state.branch_lists.map((row, index) => (
-                  <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
-              ))} 
-          </Picker>
+                <Picker.Item
+                  key={row.id}
+                  label={row.branch_name}
+                  value={row.branch_name}
+                />
+              ))}
+            </Picker>
           </View>
           <View>
             <TextInput
+              multiline={true}
               style={{
                 alignSelf: 'center',
+                textAlignVertical: 'top',
                 borderWidth: 2,
                 height: 100,
                 width: 300,
@@ -281,24 +295,24 @@ export default class AddCustomer extends Component<props> {
                 fontSize: 18,
                 padding: 5,
               }}
-              placeholder={'Address'}
+              placeholder="Address"
               onChangeText={TextInputValue =>
                 this.setState({address: TextInputValue})
               }
             />
           </View>
           <View style={{marginTop: 20}}>
-          {this.state.choosenIndex != 0 &&
-            <Button
-              onPress={() => this.add_customer()}
-              buttonStyle={styles.btn}
-              title={'Save and Continue'}
-              titleStyle={{
-                color: colors.theme_fg,
-                fontSize: 20,
-                fontFamily: font_title,
-              }}></Button>
-          }
+            {this.state.choosenIndex != 0 && (
+              <Button
+                onPress={() => this.add_customer()}
+                buttonStyle={styles.btn}
+                title={'Save and Continue'}
+                titleStyle={{
+                  color: colors.theme_fg,
+                  fontSize: 20,
+                  fontFamily: font_title,
+                }}></Button>
+            )}
           </View>
         </Content>
       </Container>
@@ -343,10 +357,10 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: 'center',
   },
-  pickerStyle:{  
-    height: 70,  
-    width: "80%",  
-    color: '#344953',  
-    justifyContent: 'center',  
-  },  
+  pickerStyle: {
+    height: 70,
+    width: '80%',
+    color: '#344953',
+    justifyContent: 'center',
+  },
 });

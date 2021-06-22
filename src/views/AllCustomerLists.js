@@ -13,7 +13,7 @@ import {
   Row,
   Col,
   Content,
-  Body, 
+  Body,
   Title,
   Container,
   Left,
@@ -29,7 +29,6 @@ import {
   user,
   api_url,
   show_customers,
-  show_customers_by_branch,
   no_data,
   font_title,
 } from '../config/Constants';
@@ -44,7 +43,7 @@ export default class AllCustomerLists extends Component {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       show_customers_by_branch: [],
-      customer_lists:[],
+      customer_lists: [],
       validation: false,
       isLoding: false,
     };
@@ -81,15 +80,12 @@ export default class AllCustomerLists extends Component {
     })
       .then(async response => {
         this.setState({isLoding: false, customer_lists: response.data.result});
-        //alert(JSON.stringify(response));
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
-  }; 
-
+  };
 
   showSnackbar(msg) {
     Snackbar.show({
@@ -157,7 +153,7 @@ export default class AllCustomerLists extends Component {
             </View>
             <View style={{margin: 10}} />
 
-           {this.state.customer_lists == '' && (
+            {this.state.customer_lists == '' && (
               <View>
                 <View style={{height: 250, marginTop: '25%'}}>
                   <LottieView source={no_data} autoPlay loop />
@@ -173,8 +169,7 @@ export default class AllCustomerLists extends Component {
               </View>
             )}
 
-            
-              <FlatList
+            <FlatList
               threshold={20}
               data={this.state.customer_lists}
               renderItem={({item, index}) => (
@@ -201,18 +196,16 @@ export default class AllCustomerLists extends Component {
                       <Text note style={{fontFamily: font_description}}>
                         {item.contact_no}
                       </Text>
-                       <Text note style={{fontFamily: font_title}}>
+                      <Text note style={{fontFamily: font_title}}>
                         Code: {item.customer_code}
                       </Text>
                     </Body>
                   </ListItem>
                 </List>
-                
               )}
               keyExtractor={item => item.id}
             />
-
-               </Content>
+          </Content>
         </ScrollView>
       </Container>
     );

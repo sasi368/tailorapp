@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import {
   View,
   Text,
-  StyleSheet, 
+  StyleSheet,
   Image,
   TextInput,
   Alert,
-  Keyboard, 
+  Keyboard,
 } from 'react-native';
 import {
   Content,
@@ -20,14 +20,24 @@ import {
   Card,
 } from 'native-base';
 import {Button, Icon} from 'react-native-elements';
-import { cuff, sho, chest, armhole, backneck, frontneck, shirt_length, arm_length, sh} from '../config/Constants';
+import {
+  cuff,
+  sho,
+  chest,
+  armhole,
+  backneck,
+  frontneck,
+  shirt_length,
+  arm_length,
+  sh,
+} from '../config/Constants';
 import {StatusBar, Loader} from '../components/GeneralComponents';
 import * as colors from '../assets/css/Colors';
 import axios from 'axios';
 import Snackbar from 'react-native-snackbar';
 import {api_url, add_measurements} from '../config/Constants';
 
-export default class Measurements extends Component<props> {
+export default class Measurements extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -447,7 +457,7 @@ const styles = StyleSheet.create({
   card: {
     height: 160,
     width: 350,
-    backgroundColor:colors.theme_fg,
+    backgroundColor: colors.theme_fg,
     borderRadius: 10,
     alignSelf: 'center',
     borderBottomWidth: 2,

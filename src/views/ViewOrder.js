@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Keyboard,FlatList} from 'react-native';
+import {View, Text, StyleSheet, Keyboard, FlatList} from 'react-native';
 import {
   Content,
   Container,
   Header,
-  List,  
+  List,
   ListItem,
   Body,
   Title,
@@ -12,41 +12,31 @@ import {
   Row,
   Col,
 } from 'native-base';
-import {Button, Icon} from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import * as colors from '../assets/css/Colors';
 import {
   api_url,
-  show_branches,
-  add_branches,
   show_all_measurements,
   font_title,
-  font_description,
   no_data,
 } from '../config/Constants';
 import axios from 'axios';
-import Snackbar from 'react-native-snackbar';
-import {StatusBar, Loader} from '../components/GeneralComponents';
-import RadioForm, {
-  RadioButton,
-  RadioButtonInput,
-  RadioButtonLabel,
-} from 'react-native-simple-radio-button';
-import {CommonActions} from '@react-navigation/native'; 
+import {StatusBar} from '../components/GeneralComponents';
 import LottieView from 'lottie-react-native';
 
 export default class ViewOrder extends Component {
   constructor(props) {
     super(props);
-     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       customer_name: '',
-      order_datas:[],
+      order_datas: [],
       isLoding: false,
-    }
-    this.show_order_details(); 
+    };
+    this.show_order_details();
   }
 
-  handleBackButtonClick = () => { 
+  handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
   };
 
@@ -61,17 +51,14 @@ export default class ViewOrder extends Component {
       url: api_url + show_all_measurements,
     })
       .then(async response => {
-       // alert(JSON.stringify(response));
         this.setState({order_datas: response.data.result});
       })
       .catch(error => {
         this.showSnackbar('Something went wrong');
-      }); 
+      });
   };
 
-
   render() {
-
     return (
       <Container>
         <View>
@@ -86,7 +73,7 @@ export default class ViewOrder extends Component {
                 height: '100%',
                 width: '15%',
                 alignSelf: 'center',
-                justifyContent: 'center', 
+                justifyContent: 'center',
               }}>
               <Left style={styles.header}>
                 <Icon
@@ -103,77 +90,86 @@ export default class ViewOrder extends Component {
                 <Title style={styles.title}>View Orders</Title>
               </Body>
             </Col>
-          </Row> 
+          </Row>
         </Header>
-          {this.state.order_datas == '' && (
-            <View>
-              <View style={{height: 250, marginTop: '40%'}}>
-                <LottieView source={no_data} autoPlay loop />
-              </View>
-                 <Text
-                  style={{
-                    alignSelf: 'center',
-                    fontFamily: font_title,
-                    fontSize: 15,
-                  }}>
-                  No Orders Available!
-                </Text>  
+        {this.state.order_datas == '' && (
+          <View>
+            <View style={{height: 250, marginTop: '40%'}}>
+              <LottieView source={no_data} autoPlay loop />
             </View>
-          )}
-          <FlatList
-              data={this.state.order_datas}
-              renderItem={({item, index}) => (
-                <Content>
-                
-                  <List>
-                    <ListItem itemDivider>
-                      <Row>
-                      <Col>
-                      <Text style={{fontFamily:font_title,fontSize:20}}>Order Id: {item.id}</Text>
-                       <Text style={{fontSize:14,fontFamily:font_title,color:colors.theme_bg}} onPress={() => this.show_tracking(item.id)}>Track Order</Text>
-                      </Col>
-                      </Row>
-                    </ListItem>                    
-                    <ListItem>
-                    <Row>
+            <Text
+              style={{
+                alignSelf: 'center',
+                fontFamily: font_title,
+                fontSize: 15,
+              }}>
+              No Orders Available!
+            </Text>
+          </View>
+        )}
+        <FlatList
+          data={this.state.order_datas}
+          renderItem={({item, index}) => (
+            <Content>
+              <List>
+                <ListItem itemDivider>
+                  <Row>
                     <Col>
-                      <Text style={{fontFamily:font_title,fontSize:18}}>{item.customer_name}</Text>
+                      <Text style={{fontFamily: font_title, fontSize: 20}}>
+                        Order Id: {item.id}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: font_title,
+                          color: colors.theme_bg,
+                        }}
+                        onPress={() => this.show_tracking(item.id)}>
+                        Track Order
+                      </Text>
+                    </Col>
+                  </Row>
+                </ListItem>
+                <ListItem>
+                  <Row>
+                    <Col>
+                      <Text style={{fontFamily: font_title, fontSize: 18}}>
+                        {item.customer_name}
+                      </Text>
                       <Text>{item.service_name}</Text>
                       <Text>{item.taken_on}</Text>
-                         
-                    </Col> 
-                    </Row>
-                    </ListItem>
-                  </List>
-                  
-                </Content>
-            )}
-              keyExtractor={item => item.id}
-            />
+                    </Col>
+                  </Row>
+                </ListItem>
+              </List>
+            </Content>
+          )}
+          keyExtractor={item => item.id}
+        />
       </Container>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
-  container: { 
+  container: {
     flex: 1,
     padding: 17,
     paddingTop: 35,
-    backgroundColor: '#ffffff' 
+    backgroundColor: '#ffffff',
   },
-   title: {
+  title: {
     fontSize: 18,
     fontFamily: font_title,
     color: '#FFFFFF',
     marginTop: 15,
     marginRight: 30,
   },
-   btn: {
+  btn: {
     width: '60%',
     borderColor: colors.theme_bg,
     backgroundColor: '#ffffff',
     borderRadius: 10,
-    borderWidth:2
+    borderWidth: 2,
   },
 });

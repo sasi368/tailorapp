@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet,Picker,Keyboard} from 'react-native';
+import {View, Text, StyleSheet, Picker, Keyboard} from 'react-native';
 import {
   Content,
   Container,
@@ -11,7 +11,7 @@ import {
   Col,
   Card,
 } from 'native-base';
-import {Icon as Icn, Button} from 'react-native-elements'; 
+import {Icon as Icn, Button} from 'react-native-elements';
 import {
   api_url,
   show_all_measurements,
@@ -30,11 +30,8 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 import Moment from 'moment';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-import Menu, {MenuItem, MenuDivider} from 'react-native-material-menu';
 
 export default class Reports extends Component {
-  _menu = null;
-  _menu2 = null;
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -45,8 +42,8 @@ export default class Reports extends Component {
       taken_on: '',
       branch: '',
       branch_lists: [],
-      branch_name:'',
-      branch_name2:'',
+      branch_name: '',
+      branch_name2: '',
       todayDatePickerVisible: false,
       fromDatePickerVisible: false,
       toDatePickerVisible: false,
@@ -68,44 +65,6 @@ export default class Reports extends Component {
   componentWillUnmount() {
     this._unsubscribe();
   }
-
-  setMenuRef = ref => {
-    this._menu = ref;
-  };
-  setMenuRef2 = ref => {
-    this._menu2 = ref;
-  };
-  hideMenu1 = () => {
-    this._menu.hide();
-    this.setState({branch: 'MainBranch'});
-    this.saveTodayDate();
-  };
-
-  hideMenu2 = () => {
-    this._menu.hide();
-    this.setState({branch: 'SubBranch'});
-    this.saveTodayDate();
-  };
-
-  hideMenu3 = () => {
-    this._menu2.hide();
-    this.setState({branch_type2: 'MainBranch'});
-    this.saveFromDate();
-  };
-
-  hideMenu4 = () => {
-    this._menu2.hide();
-    this.setState({branch_type2: 'SubBranch'});
-    this.saveFromDate();
-  };
-
-  showMenu = () => {
-    this._menu.show();
-  };
-
-  showMenu2 = () => {
-    this._menu2.show();
-  };
 
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
@@ -244,11 +203,9 @@ export default class Reports extends Component {
       },
     })
       .then(async response => {
-        //alert(JSON.stringify(response));
         this.setState({today_total_count: response.data.count});
       })
       .catch(error => {
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
@@ -301,11 +258,9 @@ export default class Reports extends Component {
     })
       .then(async response => {
         this.setState({isLoding: false, branch_lists: response.data.result});
-        //alert(JSON.stringify(response));
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
@@ -394,19 +349,24 @@ export default class Reports extends Component {
                   alignSelf: 'center',
                   marginTop: '5%',
                 }}>
-                 
-                  <Picker style={{width:'100%',left:30}}
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ branch_name: itemValue, choosenIndex: itemPosition })
-                    }
-                  > 
-                  <Picker.Item label='Choose Branch' value='Choose Here' />  
-                   {this.state.branch_lists.map((row, index) => (
-                      <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
-                    ))} 
-                  </Picker>
-                    
+                <Picker
+                  style={{width: '100%', left: 30}}
+                  selectedValue={this.state.language}
+                  onValueChange={(itemValue, itemPosition) =>
+                    this.setState({
+                      branch_name: itemValue,
+                      choosenIndex: itemPosition,
+                    })
+                  }>
+                  <Picker.Item label="Choose Branch" value="Choose Here" />
+                  {this.state.branch_lists.map((row, index) => (
+                    <Picker.Item
+                      key={row.id}
+                      label={row.branch_name}
+                      value={row.branch_name}
+                    />
+                  ))}
+                </Picker>
               </Col>
             </Row>
           </View>
@@ -648,24 +608,31 @@ export default class Reports extends Component {
                 </Text>
               )}
             </Col>
-             <Col
-                style={{
-                  height: '100%',
-                  width: '50%',
-                  alignSelf: 'center',
-                  marginTop: '5%',
-                }}>
-                <Picker style={{width:'80%'}}
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ branch_name2: itemValue, choosenIndex: itemPosition })
-                    }
-                  > 
-                  <Picker.Item label='Branch' value='Choose Here' />  
-                   {this.state.branch_lists.map((row, index) => (
-                      <Picker.Item key={row.id} label={row.branch_name} value={row.branch_name} />
-                    ))} 
-                  </Picker>
+            <Col
+              style={{
+                height: '100%',
+                width: '50%',
+                alignSelf: 'center',
+                marginTop: '5%',
+              }}>
+              <Picker
+                style={{width: '80%'}}
+                selectedValue={this.state.language}
+                onValueChange={(itemValue, itemPosition) =>
+                  this.setState({
+                    branch_name2: itemValue,
+                    choosenIndex: itemPosition,
+                  })
+                }>
+                <Picker.Item label="Branch" value="Choose Here" />
+                {this.state.branch_lists.map((row, index) => (
+                  <Picker.Item
+                    key={row.id}
+                    label={row.branch_name}
+                    value={row.branch_name}
+                  />
+                ))}
+              </Picker>
             </Col>
           </Row>
           <Card
@@ -746,7 +713,8 @@ export default class Reports extends Component {
                         alignSelf: 'center',
                         fontFamily: font_description,
                       }}>
-                      {(this.state.all_sales_count - this.state.payment_received_count)}
+                      {this.state.all_sales_count -
+                        this.state.payment_received_count}
                     </Text>
                     <Text
                       style={{
@@ -792,11 +760,11 @@ const styles = StyleSheet.create({
     color: 'gray',
     fontSize: 18,
   },
-  pickerStyle:{  
-    height: 60,  
-    width: "60%",  
-    color: '#344953',  
-  },  
+  pickerStyle: {
+    height: 60,
+    width: '60%',
+    color: '#344953',
+  },
   btn: {
     borderColor: colors.theme_white,
     backgroundColor: colors.theme_white,

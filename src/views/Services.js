@@ -23,7 +23,6 @@ import {
   api_url,
   img_url,
   show_services,
-  please_wait,
   no_data,
   font_title,
 } from '../config/Constants';
@@ -113,19 +112,19 @@ export default class Services extends Component {
 
         <Content style={{paddingLeft: 10}}>
           <View style={styles.margin_5} />
-           {this.state.services_lists == '' && (
+          {this.state.services_lists == '' && (
             <View>
               <View style={{height: 250, marginTop: '40%'}}>
                 <LottieView source={no_data} autoPlay loop />
               </View>
-                 <Text
-                  style={{
-                    alignSelf: 'center',
-                    fontFamily: font_title,
-                    fontSize: 15,
-                  }}>
-                  No services available!
-                </Text>  
+              <Text
+                style={{
+                  alignSelf: 'center',
+                  fontFamily: font_title,
+                  fontSize: 15,
+                }}>
+                No services available!
+              </Text>
             </View>
           )}
           <View>

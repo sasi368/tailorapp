@@ -11,7 +11,7 @@ import {
   Title,
   Body,
 } from 'native-base';
-import { 
+import {
   api_url,
   img_url,
   show_services,
@@ -52,7 +52,6 @@ export default class ShowServices extends Component {
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };

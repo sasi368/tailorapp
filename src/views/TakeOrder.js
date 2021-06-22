@@ -1,5 +1,15 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TextInput, Alert, Keyboard,Picker,FlatList,Image} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Alert,
+  Keyboard,
+  Picker,
+  FlatList,
+  Image,
+} from 'react-native';
 import {
   Content,
   Container,
@@ -8,30 +18,27 @@ import {
   Title,
   Left,
   Card,
-  Row, 
+  Row,
   Col,
   List,
-  ListItem,
 } from 'native-base';
-import {Button, Icon, SearchBar, Input} from 'react-native-elements';
+import {Button, Icon, Input} from 'react-native-elements';
 import * as colors from '../assets/css/Colors';
 import {
   api_url,
   show_services,
   add_measurements,
-  add_employee,
-  show_branches,
   show_customers_by_code,
   font_title,
   font_description,
-  cuff, 
-  sho, 
-  chest, 
-  armhole, 
-  backneck, 
-  frontneck, 
-  shirt_length, 
-  arm_length, 
+  cuff,
+  sho,
+  chest,
+  armhole,
+  backneck,
+  frontneck,
+  shirt_length,
+  arm_length,
   sh,
 } from '../config/Constants';
 import axios from 'axios';
@@ -40,8 +47,7 @@ import {StatusBar, Loader, ChatLoader} from '../components/GeneralComponents';
 import {CommonActions} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-export default class TakeOrder extends Component<props> {
-
+export default class TakeOrder extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -62,40 +68,40 @@ export default class TakeOrder extends Component<props> {
       pant: '',
       seat: '',
       paincha: '',
-      customer_branch:'',
+      customer_branch: '',
       service_name: '',
-      choosenIndex:0,
-      choosenIndex2:0,
+      choosenIndex: 0,
+      choosenIndex2: 0,
       services_lists: [],
       show_customers_by_code: [],
       validation: false,
       isLoding: false,
-      isLodingContent:false,
+      isLodingContent: false,
     };
     this.show_services();
   }
 
-  async componentDidMount() {  
-    this._unsubscribe=this.props.navigation.addListener('focus',()=>{
+  async componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.show_customers_by_code();
     });
   }
 
-  search = async(val) =>{
-    await this.setState({ customer_code : val });
-    if(this.state.customer_code.length == 4){
+  search = async val => {
+    await this.setState({customer_code: val});
+    if (this.state.customer_code.length == 4) {
       await this.show_customers_by_code();
     }
-  }
+  };
 
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
   };
 
-  updateSearch = (customer_code) => {
-    this.setState({ customer_code });
+  updateSearch = customer_code => {
+    this.setState({customer_code});
   };
- 
+
   show_services = async () => {
     Keyboard.dismiss();
     this.setState({isLoding: true});
@@ -108,7 +114,6 @@ export default class TakeOrder extends Component<props> {
       })
       .catch(error => {
         this.setState({isLoding: false});
-        //alert(error);
         this.showSnackbar('Something went wrong');
       });
   };
@@ -127,7 +132,7 @@ export default class TakeOrder extends Component<props> {
         shirt_length: this.state.shirt_length,
         arm_length: this.state.arm_length,
         shoulder: this.state.shoulder,
-        front_neck: this.state.front_neck, 
+        front_neck: this.state.front_neck,
         back_neck: this.state.back_neck,
         chest: this.state.chest,
         arm_hole: this.state.arm_hole,
@@ -142,14 +147,12 @@ export default class TakeOrder extends Component<props> {
       .then(async response => {
         this.setState({isLoding: false});
         if (response.data.status == 1) {
-          //alert(JSON.stringify(response));
           this.alert_func();
         } else {
           alert(response.data.message);
         }
       })
       .catch(error => {
-        //alert(error);
         this.setState({isLoding: false});
         this.showSnackbar('Something went wrong');
       });
@@ -166,7 +169,11 @@ export default class TakeOrder extends Component<props> {
       },
     })
       .then(async response => {
-        this.setState({isLodingContent: false, show_customers_by_code: response.data.result, customer_branch: response.data.result[0].branch});
+        this.setState({
+          isLodingContent: false,
+          show_customers_by_code: response.data.result,
+          customer_branch: response.data.result[0].branch,
+        });
       })
       .catch(error => {
         this.setState({isLodingContent: false});
@@ -201,7 +208,6 @@ export default class TakeOrder extends Component<props> {
   }
 
   render() {
-    
     return (
       <Container>
         <View>
@@ -233,11 +239,11 @@ export default class TakeOrder extends Component<props> {
                 <Title style={styles.title}>Take Order</Title>
               </Body>
             </Col>
-          </Row> 
+          </Row>
         </Header>
- 
+
         <Content>
-          <View> 
+          <View>
             <Text
               style={{
                 fontSize: 25,
@@ -248,88 +254,117 @@ export default class TakeOrder extends Component<props> {
               Enter Order Details
             </Text>
           </View>
-         <View>
-          <Input
-            placeholder='Search Customer Code'
-            inputStyle={{fontSize:15,padding:5,alignSelf:'center',fontFamily:font_description, padding:10}}
-            inputContainerStyle={{height:40, width:'90%', borderRadius:25, borderWidth:1,alignSelf:'center',borderColor:colors.theme_fg_five}}
-            placeholderTextColor = 'gray'
-            underlineColorAndroid="transparent"
-            onChangeText={(TextInputValue) =>
-              this.search(TextInputValue)
-            }
-            leftIcon={
-              <FontAwesome  name='search' 
-              size={20}
-              color='black'
-              style={{ color:colors.theme_bg,margin:10}}
+          <View>
+            <Input
+              placeholder="Search Customer Code"
+              inputStyle={{
+                fontSize: 15,
+                padding: 5,
+                alignSelf: 'center',
+                fontFamily: font_description,
+                padding: 10,
+              }}
+              inputContainerStyle={{
+                height: 40,
+                width: '90%',
+                borderRadius: 25,
+                borderWidth: 1,
+                alignSelf: 'center',
+                borderColor: colors.theme_fg_five,
+              }}
+              placeholderTextColor="gray"
+              underlineColorAndroid="transparent"
+              onChangeText={TextInputValue => this.search(TextInputValue)}
+              leftIcon={
+                <FontAwesome
+                  name="search"
+                  size={20}
+                  color="black"
+                  style={{color: colors.theme_bg, margin: 10}}
+                />
+              }
             />
-            }
-          /> 
           </View>
 
-           {this.state.isLodingContent == true &&  
-            <ChatLoader />
-            }
+          {this.state.isLodingContent == true && <ChatLoader />}
           <View>
-             <List>
-                <FlatList
-                  data={this.state.show_customers_by_code}
-                  renderItem={({ item }) => (
+            <List>
+              <FlatList
+                data={this.state.show_customers_by_code}
+                renderItem={({item}) => (
                   <View style={{paddingLeft: '13%'}}>
-                   <Picker style={styles.pickerStyle}
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ customer_name: itemValue, choosenIndex2: itemPosition })
-                    }
-                   >   
-                      <Picker.Item label={item.customer_name} value={item.customer_name} />
-                   
-                   </Picker>
-                   </View>      
-                  )}
-                  keyExtractor={item => item.customer_name}
-                />
-              </List>
+                    <Picker
+                      style={styles.pickerStyle}
+                      selectedValue={this.state.language}
+                      onValueChange={(itemValue, itemPosition) =>
+                        this.setState({
+                          customer_name: itemValue,
+                          choosenIndex2: itemPosition,
+                        })
+                      }>
+                      <Picker.Item
+                        label={item.customer_name}
+                        value={item.customer_name}
+                      />
+                    </Picker>
+                  </View>
+                )}
+                keyExtractor={item => item.customer_name}
+              />
+            </List>
           </View>
 
           <View style={{paddingLeft: '13%'}}>
-                  <Picker style={styles.pickerStyle}
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ service_name: itemValue,choosenIndex: itemPosition })
-                    }
-                  >   
-                  <Picker.Item label='SERVICE NAME' value='Choose Here' />
-                   {this.state.services_lists.map((row, index) => (
-                      <Picker.Item key={row.id} label={row.service_name} value={row.service_name} />
-                    ))} 
-                  </Picker>
+            <Picker
+              style={styles.pickerStyle}
+              selectedValue={this.state.language}
+              onValueChange={(itemValue, itemPosition) =>
+                this.setState({
+                  service_name: itemValue,
+                  choosenIndex: itemPosition,
+                })
+              }>
+              <Picker.Item label="SERVICE NAME" value="Choose Here" />
+              {this.state.services_lists.map((row, index) => (
+                <Picker.Item
+                  key={row.id}
+                  label={row.service_name}
+                  value={row.service_name}
+                />
+              ))}
+            </Picker>
 
-                  <Picker style={styles.pickerStyle}
-                    selectedValue={this.state.language}
-                    onValueChange={(itemValue, itemPosition) =>
-                      this.setState({ service_price: itemValue,choosenIndex: itemPosition })
-                    }
-                  >   
-                  <Picker.Item label='SERVICE PRICE' value='Choose Here' />
-                   {this.state.services_lists.map((row, index) => (
-                      <Picker.Item key={row.id} label={row.service_price} value={row.service_price} />
-                    ))} 
-                  </Picker>
+            <Picker
+              style={styles.pickerStyle}
+              selectedValue={this.state.language}
+              onValueChange={(itemValue, itemPosition) =>
+                this.setState({
+                  service_price: itemValue,
+                  choosenIndex: itemPosition,
+                })
+              }>
+              <Picker.Item label="SERVICE PRICE" value="Choose Here" />
+              {this.state.services_lists.map((row, index) => (
+                <Picker.Item
+                  key={row.id}
+                  label={row.service_price}
+                  value={row.service_price}
+                />
+              ))}
+            </Picker>
           </View>
           <View>
-          <View style={{alignSelf:'center'}}>
-          <Text
-              style={{
-                fontSize: 20,
-                margin: 10,
-                padding: 5,
-                fontFamily: font_title,
-              }}>
-              Enter Measurements
-            </Text>
-          </View>
+            <View style={{alignSelf: 'center'}}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  margin: 10,
+                  padding: 5,
+                  fontFamily: font_title,
+                }}>
+                Enter Measurements
+              </Text>
+            </View>
             <Card style={styles.card}>
               <Row>
                 <Col>
@@ -549,67 +584,20 @@ export default class TakeOrder extends Component<props> {
                 </Col>
               </Row>
             </Card>
-            {/* <Card style={styles.card}>
-              <Row>
-                <Col>
-                  <View>
-                    <Image source={sh} style={styles.img} />
-                  </View>
-                </Col>
-               <Col style={styles.col}>
-                  <View style={styles.colview}>
-                    <Text style={styles.text}>Seat</Text>
-                    <TextInput
-                      style={styles.textin}
-                      keyboardType="numeric"
-                      onChangeText={TextInputValue =>
-                        this.setState({seat: TextInputValue})
-                      }
-                    />
-                  </View>
-                </Col>
-              </Row>
-            </Card>*/}
-            {/* <Card style={styles.card}>
-              <Row>
-                <Col>
-                  <View>
-                    <Image source={sh} style={styles.img} />
-                  </View>
-                </Col>
-                <Col style={styles.col}>
-                  <View style={styles.colview}>
-                    <Text style={styles.text}>Paincha</Text>
-                    <TextInput
-                      style={styles.textin}
-                      keyboardType="numeric"
-                      onChangeText={TextInputValue =>
-                        this.setState({paincha: TextInputValue})
-                      }
-                    />
-                  </View>
-                </Col>
-              </Row>
-            </Card>*/}
-            </View>
-             {this.state.choosenIndex != 0 &&
-          <View style={{marginTop: 20}}>
-
-          
-         
-            <Button
-              onPress={this.place_order}
-              buttonStyle={styles.btn}
-              title={'Place Order'}
-              titleStyle={{
-                color: colors.theme_fg,
-                fontSize: 20,
-                fontFamily: font_title,
-              }}></Button>
-          
-             
           </View>
-        }
+          {this.state.choosenIndex != 0 && (
+            <View style={{marginTop: 20}}>
+              <Button
+                onPress={this.place_order}
+                buttonStyle={styles.btn}
+                title={'Place Order'}
+                titleStyle={{
+                  color: colors.theme_fg,
+                  fontSize: 20,
+                  fontFamily: font_title,
+                }}></Button>
+            </View>
+          )}
         </Content>
         <Loader visible={this.state.isLoding} />
       </Container>
@@ -628,10 +616,10 @@ const styles = StyleSheet.create({
   header: {
     alignSelf: 'center',
   },
-   card: {
+  card: {
     height: 160,
     width: 350,
-    backgroundColor:colors.theme_fg,
+    backgroundColor: colors.theme_fg,
     borderRadius: 10,
     alignSelf: 'center',
     borderBottomWidth: 2,
@@ -679,12 +667,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     alignSelf: 'center',
   },
-   pickerStyle:{  
-    height: 70,  
-    width: "80%",  
-    color: '#344953',  
-    justifyContent: 'center',  
-  },  
+  pickerStyle: {
+    height: 70,
+    width: '80%',
+    color: '#344953',
+    justifyContent: 'center',
+  },
   btn: {
     width: 250,
     margin: 30,

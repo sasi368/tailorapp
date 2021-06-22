@@ -1,33 +1,27 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Keyboard, FlatList} from 'react-native';
-import {Content, Container, Header, Row, Col, Card} from 'native-base';
-import {Button, CheckBox, Divider} from 'react-native-elements';
+import {Content, Container, Header, Row, Col} from 'native-base';
+import {Button, CheckBox} from 'react-native-elements';
 import {
   api_url,
   show_measurement_details_by_id,
   update_measurement_position,
-  please_wait,
   show_all_status,
-  no_data,
   add_tracking,
-  show_tracking_position,
-  font_title, 
-  font_description,
+  font_title,
 } from '../config/Constants';
 import * as colors from '../assets/css/Colors';
 import {StatusBar} from '../components/GeneralComponents';
 import axios from 'axios';
-import LottieView from 'lottie-react-native';
-import UIStepper from 'react-native-ui-stepper';
 
-export default class UpdateOrderStatus extends Component<props> {
+export default class UpdateOrderStatus extends Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClsk = this.handleBackButtonClick.bind(this);
     this.state = {
       customer_id: this.props.route.params.customer_id,
       customer_name: '',
-      measurements_data:[],
+      measurements_data: [],
       employee_name: global.user_name,
       position: '',
       position_data: [],
@@ -44,7 +38,6 @@ export default class UpdateOrderStatus extends Component<props> {
     this.show_all_status();
   }
 
-
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
   };
@@ -52,13 +45,13 @@ export default class UpdateOrderStatus extends Component<props> {
   async componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.show_measurement_details();
-    }); 
+    });
   }
 
   componentWillUnmount() {
     this._unsubscribe();
   }
-  
+
   //handling check boxes
   check(item, value) {
     if (item.check) {
@@ -104,7 +97,7 @@ export default class UpdateOrderStatus extends Component<props> {
     this.forceUpdate();
   }
 
-//showing positions
+  //showing positions
   show_all_status = async () => {
     Keyboard.dismiss();
     await axios({
@@ -112,14 +105,12 @@ export default class UpdateOrderStatus extends Component<props> {
       url: api_url + show_all_status,
     })
       .then(async response => {
-        //alert(JSON.stringify(response));
         this.setState({position_data: response.data.result});
       })
       .catch(error => {
         this.showSnackbar('Something went wrong');
       });
   };
-
 
   //for showing all datas
   show_measurement_details = async () => {
@@ -131,7 +122,6 @@ export default class UpdateOrderStatus extends Component<props> {
       },
     })
       .then(async response => {
-       // alert(JSON.stringify(response));
         this.setState({measurements_data: response.data.result});
       })
       .catch(error => {
@@ -201,10 +191,10 @@ export default class UpdateOrderStatus extends Component<props> {
             </Text>
           </View>
         </Header>
-       
-          <FlatList
-              data={this.state.measurements_data}
-              renderItem={({item, index}) => (
+
+        <FlatList
+          data={this.state.measurements_data}
+          renderItem={({item, index}) => (
             <Content>
               <View style={{margin: 20, marginLeft: 30}}>
                 <View>
@@ -233,12 +223,10 @@ export default class UpdateOrderStatus extends Component<props> {
                       <Text style={{color: 'gray', fontSize: 15}}>
                         Taken on {item.taken_on}
                       </Text>
-                     
                     </Col>
-                  
                   </Row>
                   <View style={{marginTop: 5}} />
-                    {item.position != 1 &&
+                  {item.position != 1 &&
                     item.position != 2 &&
                     item.position != 3 &&
                     item.position != 4 &&
@@ -322,13 +310,10 @@ export default class UpdateOrderStatus extends Component<props> {
                       onPress={() => this.check(item)}
                     />
                   )}
-                 
-                
 
                   <View style={{margin: 5}} />
 
-              
-                    <View style={{margin: 5}} />
+                  <View style={{margin: 5}} />
 
                   {item.position != 5 && item.id && (
                     <Button
@@ -350,9 +335,8 @@ export default class UpdateOrderStatus extends Component<props> {
                   )}
                 </View>
               </View>
-            
             </Content>
-         )}
+          )}
           keyExtractor={item => item.id}
         />
       </Container>
