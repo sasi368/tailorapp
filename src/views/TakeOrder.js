@@ -6,7 +6,6 @@ import {
   TextInput,
   Alert,
   Keyboard,
-  Picker,
   FlatList,
   Image,
 } from 'react-native';
@@ -46,6 +45,7 @@ import Snackbar from 'react-native-snackbar';
 import {StatusBar, Loader, ChatLoader} from '../components/GeneralComponents';
 import {CommonActions} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {Picker} from '@react-native-picker/picker';
 
 export default class TakeOrder extends Component {
   constructor(props) {
@@ -72,6 +72,7 @@ export default class TakeOrder extends Component {
       service_name: '',
       choosenIndex: 0,
       choosenIndex2: 0,
+      choosenIndex3: 0,
       services_lists: [],
       show_customers_by_code: [],
       validation: false,
@@ -81,11 +82,11 @@ export default class TakeOrder extends Component {
     this.show_services();
   }
 
-  async componentDidMount() {
+  /*async componentDidMount() {
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.show_customers_by_code();
     });
-  }
+  }*/
 
   search = async val => {
     await this.setState({customer_code: val});
@@ -295,7 +296,7 @@ export default class TakeOrder extends Component {
                   <View style={{paddingLeft: '13%'}}>
                     <Picker
                       style={styles.pickerStyle}
-                      selectedValue={this.state.language}
+                      selectedValue={this.state.customer_name}
                       onValueChange={(itemValue, itemPosition) =>
                         this.setState({
                           customer_name: itemValue,
@@ -318,10 +319,10 @@ export default class TakeOrder extends Component {
             <Picker
               style={styles.pickerStyle}
               selectedValue={this.state.language}
-              onValueChange={(itemValue, itemPosition) =>
+              onValueChange={(itemValue, itemPosition2) =>
                 this.setState({
                   service_name: itemValue,
-                  choosenIndex: itemPosition,
+                  choosenIndex3: itemPosition2,
                 })
               }>
               <Picker.Item label="SERVICE NAME" value="Choose Here" />
@@ -585,7 +586,7 @@ export default class TakeOrder extends Component {
               </Row>
             </Card>
           </View>
-          {this.state.choosenIndex != 0 && (
+          {this.state.choosenIndex != 0 && this.state.choosenIndex3 != 0 &&(
             <View style={{marginTop: 20}}>
               <Button
                 onPress={this.place_order}

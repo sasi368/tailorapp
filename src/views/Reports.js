@@ -148,10 +148,10 @@ export default class Reports extends Component {
 
   saveTodayDate = async () => {
     await AsyncStorage.setItem('user_id', this.state.today_date.toString());
-    await AsyncStorage.setItem('branch', this.state.branch.toString());
+    await AsyncStorage.setItem('branch_name', this.state.branch_name2.toString());
     global.today_date = await this.state.today_date;
-    global.branch = await this.state.branch;
-    if (global.branch != null) {
+    global.branch_name = await this.state.branch_name;
+    if (global.branch_name != null) {
       await this.show_today_sales();
     } else {
       alert('select branch');
