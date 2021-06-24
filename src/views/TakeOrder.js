@@ -34,7 +34,7 @@ import {
   sho,
   chest,
   armhole,
-  backneck,
+  backneck, 
   frontneck,
   shirt_length,
   arm_length,
@@ -285,33 +285,35 @@ export default class TakeOrder extends Component {
                 />
               }
             />
+         
           </View>
 
           {this.state.isLodingContent == true && <ChatLoader />}
           <View>
             <List>
-              <FlatList
-                data={this.state.show_customers_by_code}
-                renderItem={({item}) => (
+              
                   <View style={{paddingLeft: '13%'}}>
+
                     <Picker
                       style={styles.pickerStyle}
-                      selectedValue={this.state.customer_name}
+                      selectedValue={this.state.language}
                       onValueChange={(itemValue, itemPosition) =>
                         this.setState({
                           customer_name: itemValue,
                           choosenIndex2: itemPosition,
                         })
                       }>
+                       <Picker.Item label="CUSTOMER NAME" value="Choose Here" />
+                      {this.state.show_customers_by_code.map((row, index) => (
                       <Picker.Item
-                        label={item.customer_name}
-                        value={item.customer_name}
+                        key={row.id}
+                        label={row.customer_name}
+                        value={row.customer_name}
                       />
+                      ))}
                     </Picker>
                   </View>
-                )}
-                keyExtractor={item => item.customer_name}
-              />
+                  
             </List>
           </View>
 
@@ -319,9 +321,9 @@ export default class TakeOrder extends Component {
             <Picker
               style={styles.pickerStyle}
               selectedValue={this.state.language}
-              onValueChange={(itemValue, itemPosition2) =>
+              onValueChange={(itemValue2, itemPosition2) =>
                 this.setState({
-                  service_name: itemValue,
+                  service_name: itemValue2,
                   choosenIndex3: itemPosition2,
                 })
               }>
@@ -338,9 +340,9 @@ export default class TakeOrder extends Component {
             <Picker
               style={styles.pickerStyle}
               selectedValue={this.state.language}
-              onValueChange={(itemValue, itemPosition) =>
+              onValueChange={(itemValue3, itemPosition) =>
                 this.setState({
-                  service_price: itemValue,
+                  service_price: itemValue3,
                   choosenIndex: itemPosition,
                 })
               }>
@@ -586,7 +588,7 @@ export default class TakeOrder extends Component {
               </Row>
             </Card>
           </View>
-          {this.state.choosenIndex != 0 && this.state.choosenIndex3 != 0 &&(
+          {this.state.choosenIndex != 0 && this.state.choosenIndex3 != 0 && this.state.choosenIndex2 != 0 &&(
             <View style={{marginTop: 20}}>
               <Button
                 onPress={this.place_order}
