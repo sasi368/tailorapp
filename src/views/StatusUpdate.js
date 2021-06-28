@@ -19,10 +19,12 @@ import {
   no_data,
   font_title,
   show_all_measurements,
+  show_measurement_details_by_branch,
 } from '../config/Constants';
 import axios from 'axios';
 import {StatusBar} from '../components/GeneralComponents';
 import LottieView from 'lottie-react-native';
+import Snackbar from 'react-native-snackbar';
 
 export default class StatusUpdate extends Component {
   constructor(props) {
@@ -30,14 +32,24 @@ export default class StatusUpdate extends Component {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       order_datas: [],
+      orders_by_branch: [],
       isLoding: false,
     };
-    this.show_order_details();
   }
 
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
   };
+  
+  async componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.show_measurement_details_by_branch();
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
 
   view_details = id => {
     this.props.navigation.navigate('ViewMeasurementDetails', {customer_id: id});
@@ -47,14 +59,25 @@ export default class StatusUpdate extends Component {
     this.props.navigation.navigate('UpdateOrderStatus', {customer_id: id});
   };
 
-  show_order_details = async () => {
+  showSnackbar(msg) {
+    Snackbar.show({
+      title: msg,
+      duration: Snackbar.LENGTH_SHORT,
+      backgroundColor:colors.theme_bg
+    });
+  }
+
+  show_measurement_details_by_branch = async () => {
     Keyboard.dismiss();
     await axios({
-      method: 'get',
-      url: api_url + show_all_measurements,
+      method: 'post',
+      url: api_url + show_measurement_details_by_branch,
+      data: {
+        branch: global.branch,
+      },
     })
       .then(async response => {
-        this.setState({order_datas: response.data.result});
+        this.setState({orders_by_branch: response.data.result});
       })
       .catch(error => {
         this.showSnackbar('Something went wrong');
@@ -96,7 +119,7 @@ export default class StatusUpdate extends Component {
             </Col>
           </Row>
         </Header>
-        {this.state.order_datas == '' && (
+        {this.state.orders_by_branch == '' && (
           <View>
             <View style={{height: 250, marginTop: '40%'}}>
               <LottieView source={no_data} autoPlay loop />
@@ -113,7 +136,7 @@ export default class StatusUpdate extends Component {
         )}
 
         <FlatList
-          data={this.state.order_datas}
+          data={this.state.orders_by_branch}
           renderItem={({item, index}) => (
             <Content>
               <List>
@@ -130,13 +153,8 @@ export default class StatusUpdate extends Component {
                       </Text>
                       <Text>{item.service_name}</Text>
                       <Text>{item.taken_on}</Text>
-                      <View style={{marginTop: 10}} />
-                      {item.branch != global.branch && (
-                        <Text style={{fontSize: 16, fontFamily: font_title}}>
-                          {item.branch}
-                        </Text>
-                      )}
-                      {item.branch == global.branch && (
+                      <View style={{marginTop: 10}} />             
+                   
                         <Button
                           buttonStyle={styles.btn}
                           onPress={() => this.update_status(item.id)}
@@ -147,9 +165,9 @@ export default class StatusUpdate extends Component {
                             fontFamily: font_title,
                           }}
                         />
-                      )}
+                      
                       <View style={{marginTop: 10}} />
-                      {item.branch == global.branch && (
+                    
                         <Button
                           buttonStyle={styles.btn}
                           onPress={() => this.view_details(item.id)}
@@ -160,7 +178,7 @@ export default class StatusUpdate extends Component {
                             fontFamily: font_title,
                           }}
                         />
-                      )}
+                     
                     </Col>
                   </Row>
                 </ListItem>

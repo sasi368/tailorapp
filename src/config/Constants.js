@@ -21,6 +21,7 @@ export const add_measurements = "/api/add_measurements";
 export const show_all_measurements = "/api/show_all_measurements";
 export const show_measurement_details = "/api/show_measurement_details";
 export const show_measurement_details_by_id = "/api/show_measurement_details_by_id";
+export const show_measurement_details_by_branch = "/api/show_measurement_details_by_branch";
 export const show_count_by_date = "/api/show_measurements_by_date";
 export const show_today_by_date = "/api/show_today_by_date";
 export const add_tracking = "/api/add_tracking";

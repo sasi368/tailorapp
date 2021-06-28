@@ -17,12 +17,14 @@ import * as colors from '../assets/css/Colors';
 import {
   api_url,
   show_all_measurements,
+  show_measurement_details_by_branch,
   font_title,
   no_data,
 } from '../config/Constants';
 import axios from 'axios';
 import {StatusBar} from '../components/GeneralComponents';
 import LottieView from 'lottie-react-native';
+import Snackbar from 'react-native-snackbar';
 
 export default class ViewOrder extends Component {
   constructor(props) {
@@ -31,27 +33,48 @@ export default class ViewOrder extends Component {
     this.state = {
       customer_name: '',
       order_datas: [],
+      orders_by_branch:[],
       isLoding: false,
     };
-    this.show_order_details();
   }
 
   handleBackButtonClick = () => {
     this.props.navigation.goBack(null);
   };
 
+  async componentDidMount() {
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.show_measurement_details_by_branch();
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
   show_tracking = order_id => {
     this.props.navigation.navigate('Tracking', {order_id: order_id});
   };
 
-  show_order_details = async () => {
+  showSnackbar(msg) {
+    Snackbar.show({
+      title: msg,
+      duration: Snackbar.LENGTH_SHORT,
+      backgroundColor:colors.theme_bg
+    });
+  }
+
+  show_measurement_details_by_branch = async () => {
     Keyboard.dismiss();
     await axios({
-      method: 'get',
-      url: api_url + show_all_measurements,
+      method: 'post',
+      url: api_url + show_measurement_details_by_branch,
+      data: {
+        branch: global.branch,
+      },
     })
       .then(async response => {
-        this.setState({order_datas: response.data.result});
+        this.setState({orders_by_branch: response.data.result,branch_count:response.data.count});
       })
       .catch(error => {
         this.showSnackbar('Something went wrong');
@@ -92,7 +115,7 @@ export default class ViewOrder extends Component {
             </Col>
           </Row>
         </Header>
-        {this.state.order_datas == '' && (
+        {this.state.orders_by_branch == '' && (
           <View>
             <View style={{height: 250, marginTop: '40%'}}>
               <LottieView source={no_data} autoPlay loop />
@@ -107,8 +130,8 @@ export default class ViewOrder extends Component {
             </Text>
           </View>
         )}
-        <FlatList
-          data={this.state.order_datas}
+          <FlatList
+          data={this.state.orders_by_branch}
           renderItem={({item, index}) => (
             <Content>
               <List>
@@ -146,6 +169,45 @@ export default class ViewOrder extends Component {
           )}
           keyExtractor={item => item.id}
         />
+      {/*  <FlatList
+          data={this.state.order_datas}
+          renderItem={({item, index}) => (
+            <Content>
+              <List>
+                <ListItem itemDivider>
+                  <Row>
+                    <Col>
+                      <Text style={{fontFamily: font_title, fontSize: 20}}>
+                        Order Id: {item.id}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontFamily: font_title,
+                          color: colors.theme_bg,
+                        }}
+                        onPress={() => this.show_tracking(item.id)}>
+                        Track Order
+                      </Text>
+                    </Col>
+                  </Row>
+                </ListItem>
+                <ListItem>
+                  <Row>
+                    <Col>
+                      <Text style={{fontFamily: font_title, fontSize: 18}}>
+                        {item.customer_name}
+                      </Text>
+                      <Text>{item.service_name}</Text>
+                      <Text>{item.taken_on}</Text>
+                    </Col>
+                  </Row>
+                </ListItem>
+              </List>
+            </Content>
+          )}
+          keyExtractor={item => item.id}
+        />*/}
       </Container>
     );
   }

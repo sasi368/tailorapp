@@ -142,6 +142,7 @@ export default class AddEmployee extends Component {
     Snackbar.show({
       title: msg,
       duration: Snackbar.LENGTH_SHORT,
+      backgroundColor:colors.theme_bg
     });
   }
 
