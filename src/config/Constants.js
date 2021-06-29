@@ -29,6 +29,7 @@ export const show_tracking_position = "/api/show_tracking_position";
 export const show_all_status = "/api/show_all_status";
 export const show_order_status = "/api/show_order_status";
 export const update_measurement_position = "/api/update_measurement_position";
+export const update_tracking_position = "/api/update_tracking_position";
 
 //Font Family
 export const font_title = "TitilliumWeb-Bold";

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, Keyboard, FlatList} from 'react-native';
+import {View, Text, StyleSheet, Keyboard, FlatList, Alert} from 'react-native';
 import {Content, Container, Header, Row, Col} from 'native-base';
 import {Button, CheckBox} from 'react-native-elements';
 import {
   api_url,
   show_measurement_details_by_id,
   update_measurement_position,
+  update_tracking_position,
   show_all_status,
   add_tracking,
   font_title,
@@ -13,11 +14,12 @@ import {
 import * as colors from '../assets/css/Colors';
 import {StatusBar} from '../components/GeneralComponents';
 import axios from 'axios';
+import {CommonActions} from '@react-navigation/native';
 
 export default class UpdateOrderStatus extends Component {
   constructor(props) {
     super(props);
-    this.handleBackButtonClsk = this.handleBackButtonClick.bind(this);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       customer_id: this.props.route.params.customer_id,
       customer_name: '',
@@ -51,6 +53,24 @@ export default class UpdateOrderStatus extends Component {
   componentWillUnmount() {
     this._unsubscribe();
   }
+
+  report() {
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{name: 'Reports'}],
+      }),
+    );
+  }
+
+  alert_func = () =>
+    Alert.alert('Success', 'Status Updated', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => this.report()},
+  ]);
 
   //handling check boxes
   check(item, value) {
@@ -120,9 +140,30 @@ export default class UpdateOrderStatus extends Component {
       data: {
         id: this.state.customer_id,
       },
-    })
+    }) 
       .then(async response => {
         this.setState({measurements_data: response.data.result});
+        //alert(JSON.stringify(response));
+      })
+      .catch(error => {
+        this.showSnackbar('Something went wrong');
+      });
+  };
+
+  //updating a update_tracking_position api position by giving id and position field
+  update_tracking_position = async (order_id, position) => {
+    Keyboard.dismiss();
+    await axios({
+      method: 'post',
+      url: api_url + update_tracking_position,
+      data: {
+        position: position,
+        order_id: order_id,
+      },
+    })
+      .then(async response => {
+        /*alert(JSON.stringify(response));*/
+        /*this.setState({ measurements_data:response.data.result });*/
       })
       .catch(error => {
         this.showSnackbar('Something went wrong');
@@ -130,18 +171,18 @@ export default class UpdateOrderStatus extends Component {
   };
 
   //updating a measurement api position by giving id and position field
-  update_measurement_position = async (id, position) => {
+  update_measurement_position = async (order_id, position) => {
     Keyboard.dismiss();
     await axios({
       method: 'post',
       url: api_url + update_measurement_position,
       data: {
-        id: id,
         position: position,
+        id: order_id,
       },
     })
       .then(async response => {
-        //alert(JSON.stringify(response));
+        /*alert(JSON.stringify(response));*/
         /*this.setState({ measurements_data:response.data.result });*/
       })
       .catch(error => {
@@ -156,6 +197,7 @@ export default class UpdateOrderStatus extends Component {
       method: 'post',
       url: api_url + add_tracking,
       data: {
+        order_id:id, 
         customer_name: customer_name,
         service_name: service_name,
         employee_name: this.state.employee_name,
@@ -165,13 +207,16 @@ export default class UpdateOrderStatus extends Component {
       .then(async response => {
         if (response.data.status == 1) {
           this.update_measurement_position(id, this.state.position);
-          alert('Status Updated');
+          this.update_tracking_position(id, this.state.position);
+          this.alert_func();   
         } else {
           alert(response.data.message);
         }
       })
       .catch(error => {
-        this.showSnackbar('Something went wrong');
+          this.update_measurement_position(id, this.state.position);
+          this.update_tracking_position(id, this.state.position);
+          this.alert_func();
       });
   };
 
@@ -231,7 +276,7 @@ export default class UpdateOrderStatus extends Component {
                     item.position != 3 &&
                     item.position != 4 &&
                     item.position != 5 &&
-                    item.id && (
+                   (
                       <CheckBox
                         title="Measuring"
                         checked={item.check}
@@ -242,7 +287,7 @@ export default class UpdateOrderStatus extends Component {
                     item.position != 3 &&
                     item.position != 4 &&
                     item.position != 5 &&
-                    item.id && (
+                    (
                       <CheckBox
                         title="Cutting"
                         checked={item.check2}
@@ -252,21 +297,21 @@ export default class UpdateOrderStatus extends Component {
                   {item.position != 3 &&
                     item.position != 4 &&
                     item.position != 5 &&
-                    item.id && (
+                   (
                       <CheckBox
                         title="Stitching"
                         checked={item.check3}
                         onPress={() => this.check3(item)}
                       />
                     )}
-                  {item.position != 4 && item.position != 5 && item.id && (
+                  {item.position != 4 && item.position != 5 && (
                     <CheckBox
                       title="Quality"
                       checked={item.check4}
                       onPress={() => this.check4(item)}
                     />
                   )}
-                  {item.position != 5 && item.id && (
+                  {item.position != 5 && (
                     <CheckBox
                       title="Delivery"
                       checked={item.check5}
@@ -274,7 +319,7 @@ export default class UpdateOrderStatus extends Component {
                     />
                   )}
 
-                  {item.position == 5 && item.id && (
+                  {item.position == 5 && (
                     <CheckBox
                       title="Measuring"
                       checked={this.state.checked}
@@ -282,28 +327,28 @@ export default class UpdateOrderStatus extends Component {
                     />
                   )}
 
-                  {item.position == 5 && item.id && (
+                  {item.position == 5 && (
                     <CheckBox
                       title="Cutting"
                       checked={this.state.checked}
                       onPress={() => this.check(item)}
                     />
                   )}
-                  {item.position == 5 && item.id && (
+                  {item.position == 5 && (
                     <CheckBox
                       title="Stitching"
                       checked={this.state.checked}
                       onPress={() => this.check(item)}
                     />
                   )}
-                  {item.position == 5 && item.id && (
+                  {item.position == 5 && (
                     <CheckBox
                       title="Quality"
                       checked={this.state.checked}
                       onPress={() => this.check(item)}
                     />
                   )}
-                  {item.position == 5 && item.id && (
+                  {item.position == 5 && (
                     <CheckBox
                       title="Delivery"
                       checked={this.state.checked}
@@ -315,7 +360,7 @@ export default class UpdateOrderStatus extends Component {
 
                   <View style={{margin: 5}} />
 
-                  {item.position != 5 && item.id && (
+                  {item.position != 5 && (
                     <Button
                       title={'Update Work Status'}
                       titleStyle={{

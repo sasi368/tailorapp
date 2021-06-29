@@ -64,7 +64,7 @@ export default class Tracking extends Component {
       method: 'post',
       url: api_url + show_order_status,
       data: {
-        id: this.state.order_id,
+        order_id: this.state.order_id,
       },
     })
       .then(async response => {

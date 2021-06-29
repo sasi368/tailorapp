@@ -37,7 +37,7 @@ export default class StatusUpdate extends Component {
     };
   }
 
-  handleBackButtonClick = () => {
+  handleBackButtonClick = () => { 
     this.props.navigation.goBack(null);
   };
   
